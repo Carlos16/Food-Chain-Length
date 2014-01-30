@@ -120,11 +120,47 @@ Code used in "Why are there so few trophic levels: selection against instability
   
 Start by loading required packages
 ```{r packages, message = F}
+require(RCurl)
 require(igraph)
 require(reshape2)
 require(ggplot2)
 require(grid)
+require(devtools)
 ```
+
+### Figure 1  
+  
+#### Figure 1a
+```{r}
+trophic.properties.URL <- getURL("https://raw.github.com/jjborrelli/Food-Chain-Length/master/NodeProperties.csv")
+trophic.properties <- read.csv(text = trophic.properties.URL)
+
+consumers <- which(round(trophic.properties$TL, 6) >= 2)
+
+# ggplot of distribution of trophic positions equal or higher than 2
+tc.plot<-qplot(trophic.properties$TL[consumers], binwidth = .25, geom = "histogram", 
+             xlab = "Trophic Position", ylab = "Frequency")
+tc.plot <- tc.plot + theme(axis.title.x = element_text(size = 20))
+tc.plot <- tc.plot + theme(axis.title.y = element_text(size = 20))
+tc.plot <- tc.plot + theme(axis.text.x = element_text(size = 15))
+tc.plot <- tc.plot + theme(axis.text.y = element_text(size = 15))
+tc.plot + scale_x_continuous(breaks = 1:6)
+```
+
+#### Figure 1b
+```{r}
+web.diameters.URL <- getURL("https://raw.github.com/jjborrelli/Food-Chain-Length/master/webDiameters.csv")
+web.diameters <- read.csv(text = web.diameters.URL)
+
+diam.plot<-qplot(web.diameters$Diameter, binwidth = .5, geom = "histogram", 
+               xlab = "Diameter", ylab = "Frequency")
+diam.plot <- diam.plot + theme(axis.title.x = element_text(size=20))
+diam.plot <- diam.plot + theme(axis.title.y = element_blank())
+diam.plot <- diam.plot + theme(axis.text.x = element_text(size=15))
+diam.plot <- diam.plot + theme(axis.text.y = element_text(size=15))
+diam.plot + scale_x_continuous(breaks = 0:9)
+```
+
 
   
 The first step is to create the various adjacency matrices for each of the perturbed food chains. The code below will create the sign matrix structure for each perturbed chain of 2, 3, 4, 5, and 6 levels. A -1 indicates the impact of a predator on its prey (negative), while a 1 indicates the impact of the prey on the predator (positive). 
@@ -163,9 +199,9 @@ sign.matrices
 ```
   
   
-### Figure 1  
+### Figure 2  
   
-These matrices can be visualized as presented in **Figure 1** with the following code (note: requires the igraph library):  
+These matrices can be visualized as presented in **Figure 2** with the following code (note: requires the igraph library):  
   
 But first the sign matrices need to be converted to graph objects
 
@@ -382,7 +418,7 @@ points(unlist(qss.sensitivity2)~c(2,3,4,5,6),col="red",bg="red",pch=22,typ="o",l
 points(unlist(qss.sensitivity3)~c(2,3,4,5,6),col="orange",bg="orange",pch=23,typ="o",lty=2)
 ``` 
 
-### Figure 2 code  
+### Figure 3   
   
 Plot all together  
   

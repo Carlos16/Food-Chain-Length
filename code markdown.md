@@ -120,11 +120,55 @@ Code used in "Why are there so few trophic levels: selection against instability
 Start by loading required packages
 
 ```r
+require(RCurl)
 require(igraph)
 require(reshape2)
 require(ggplot2)
 require(grid)
+require(devtools)
 ```
+
+
+### Figure 1  
+  
+#### Figure 1a
+
+```r
+trophic.properties.URL <- getURL("https://raw.github.com/jjborrelli/Food-Chain-Length/master/NodeProperties.csv")
+trophic.properties <- read.csv(text = trophic.properties.URL)
+
+consumers <- which(round(trophic.properties$TL, 6) >= 2)
+
+# ggplot of distribution of trophic positions equal or higher than 2
+tc.plot <- qplot(trophic.properties$TL[consumers], binwidth = 0.25, geom = "histogram", 
+    xlab = "Trophic Position", ylab = "Frequency")
+tc.plot <- tc.plot + theme(axis.title.x = element_text(size = 20))
+tc.plot <- tc.plot + theme(axis.title.y = element_text(size = 20))
+tc.plot <- tc.plot + theme(axis.text.x = element_text(size = 15))
+tc.plot <- tc.plot + theme(axis.text.y = element_text(size = 15))
+tc.plot + scale_x_continuous(breaks = 1:6)
+```
+
+![plot of chunk unnamed-chunk-2](figure/unnamed-chunk-2.png) 
+
+
+#### Figure 1b
+
+```r
+web.diameters.URL <- getURL("https://raw.github.com/jjborrelli/Food-Chain-Length/master/webDiameters.csv")
+web.diameters <- read.csv(text = web.diameters.URL)
+
+diam.plot <- qplot(web.diameters$Diameter, binwidth = 0.5, geom = "histogram", 
+    xlab = "Diameter", ylab = "Frequency")
+diam.plot <- diam.plot + theme(axis.title.x = element_text(size = 20))
+diam.plot <- diam.plot + theme(axis.title.y = element_blank())
+diam.plot <- diam.plot + theme(axis.text.x = element_text(size = 15))
+diam.plot <- diam.plot + theme(axis.text.y = element_text(size = 15))
+diam.plot + scale_x_continuous(breaks = 0:9)
+```
+
+![plot of chunk unnamed-chunk-3](figure/unnamed-chunk-3.png) 
+
 
 
   
@@ -204,9 +248,9 @@ $`6 sp`
 
   
   
-### Figure 1  
+### Figure 2  
   
-These matrices can be visualized as presented in **Figure 1** with the following code (note: requires the igraph library):  
+These matrices can be visualized as presented in **Figure 2** with the following code (note: requires the igraph library):  
   
 But first the sign matrices need to be converted to graph objects
 
@@ -509,7 +553,7 @@ points(unlist(qss.sensitivity3) ~ c(2, 3, 4, 5, 6), col = "orange", bg = "orange
 ![plot of chunk extraPlot](figure/extraPlot.png) 
 
 
-### Figure 2 code  
+### Figure 3   
   
 Plot all together  
   
