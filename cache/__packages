@@ -1,4 +1,10 @@
+devtools
+grid
+ggplot2
+reshape2
 igraph
+RCurl
+bitops
 knitr
 stats
 graphics
