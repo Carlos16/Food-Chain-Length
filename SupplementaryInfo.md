@@ -6,7 +6,7 @@ Supplementary Information
 Data
 -----------------------------------------------------------------------------------------------  
 ### Data Sources
-Three food webs were downloaded from the [Dryad Digital Repository](http://datadryad.org/resource/doi:10.5061/dryad.c213h) (Roopnarine & Hertog 2012a, 2012b). Another seven were available from [Ecological Archives](http://esapubs.org/Archive/search.php) (Hechinger et al. 2011; Mouritsen et al. 2011; Thieltges et al. 2011; Zander et al. 2011; Preston et al. 2012). Fourteen webs were provided by Jennifer Dunne of the [PEaCE Lab](http://peacelab.net/) (Baird & Ulanowicz 1989; Warren 1989; Polis 1991a; Hall & Raffaelli 1991; Martinez 1991; Christensen & Pauly 1992; Havens 1992; Goldwasser & Roughgarden 1993; Opitz 1996; Waide & Reagan 1996; Yodzis 1998, 2000; Christian & Luczkovich 1999; Martinez et al. 1999; Memmott et al. 2000; Link 2002) that were analyzed in (Dunne et al. 2002, 2004). The remaining 26 food webs were downloaded from the [Interaction Web Database](http://www.nceas.ucsb.edu/interactionweb/html/thomps_towns.html) (Jaarsma et al. 1998; Townsend et al. 1998; Thompson & Townsend 1999, 2000, 2003, 2005; Thompson & Edwards 2001).  
+Three food webs were downloaded from the [Dryad Digital Repository](http://datadryad.org/resource/doi:10.5061/dryad.c213h) (Roopnarine & Hertog 2012a, 2012b). Another seven were available from [Ecological Archives](http://esapubs.org/Archive/search.php) (Hechinger et al. 2011; Mouritsen et al. 2011; Thieltges et al. 2011; Zander et al. 2011; Preston et al. 2012). Fourteen webs were provided by Jennifer Dunne of the [PEaCE Lab](http://peacelab.net/) (Baird & Ulanowicz 1989; Warren 1989; Polis 1991; Hall & Raffaelli 1991; Martinez 1991; Christensen & Pauly 1992; Havens 1992; Goldwasser & Roughgarden 1993; Opitz 1996; Waide & Reagan 1996; Yodzis 1998, 2000; Christian & Luczkovich 1999; Martinez et al. 1999; Memmott et al. 2000; Link 2002) that were analyzed in (Dunne et al. 2002, 2004). The remaining 26 food webs were downloaded from the [Interaction Web Database](http://www.nceas.ucsb.edu/interactionweb/html/thomps_towns.html) (Jaarsma et al. 1998; Townsend et al. 1998; Thompson & Townsend 1999, 2000, 2003, 2005; Thompson & Edwards 2001).  
   
 ### References
   
@@ -40,7 +40,7 @@ Hall, S. and Raffaelli, D. (1991). Food-web patterns: lessons from a species-ric
       
 8.
   
-Havens, K. (1992). Scale and structure in natural food webs. Science (80-. )., 257, 1107–1109.
+Havens, K. (1992). Scale and structure in natural food webs. Science., 257, 1107–1109.
       
 9.
   
@@ -76,11 +76,7 @@ Opitz, S. (1996). Trophic interactions in Caribbean coral reefs. ICALRM Tech, Ma
       
 17.
   
-Polis, G. (1991a). Complex trophic interactions in deserts : an empirical critique of food-web theory. Am. Nat., 138, 123–155.
-      
-18.
-  
-Polis, G.A. (1991b). Complex trophic interactions in deserts: an empirical critique of food-web theory. Am. Nat., 138, 123–155.  
+Polis, G. (1991). Complex trophic interactions in deserts: an empirical critique of food-web theory. Am. Nat., 138, 123–155.  
       
 19.
   
@@ -149,7 +145,8 @@ Zander, C.D., Josten, N., Detloff, K.C., Poulin, R., McLaughlin, J.P. and Thielt
 Code used in "Why are there so few trophic levels: selection against instability explains the pattern"
 ------------------------------------------------------------------------------------------------  
   
-Start by loading required packages
+Loading required packages  
+
 
 ```r
 require(RCurl)
@@ -161,33 +158,12 @@ require(devtools)
 ```
 
 
-### Figure 1  
-  
-#### Figure 1a
+
+### Figure S1
 
 ```r
-trophic.properties.URL <- getURL("https://raw.github.com/jjborrelli/Food-Chain-Length/master/NodeProperties.csv")
-trophic.properties <- read.csv(text = trophic.properties.URL)
 
-consumers <- which(round(trophic.properties$TL, 6) >= 2)
-
-# ggplot of distribution of trophic positions equal or higher than 2
-tc.plot <- qplot(trophic.properties$TL[consumers], binwidth = 0.25, geom = "histogram", 
-    xlab = "Trophic Position", ylab = "Frequency")
-tc.plot <- tc.plot + theme(axis.title.x = element_text(size = 20))
-tc.plot <- tc.plot + theme(axis.title.y = element_text(size = 20))
-tc.plot <- tc.plot + theme(axis.text.x = element_text(size = 15))
-tc.plot <- tc.plot + theme(axis.text.y = element_text(size = 15))
-tc.plot + scale_x_continuous(breaks = 1:6)
-```
-
-![plot of chunk unnamed-chunk-2](figure/unnamed-chunk-2.png) 
-
-
-#### Figure 1b
-
-```r
-web.diameters.URL <- getURL("https://raw.github.com/jjborrelli/Food-Chain-Length/master/webDiameters.csv")
+web.diameters.URL <- getURL("https://raw.github.com/jjborrelli/Food-Chain-Length/master/Tables/webDiameters.csv")
 web.diameters <- read.csv(text = web.diameters.URL)
 
 diam.plot <- qplot(web.diameters$Diameter, binwidth = 0.5, geom = "histogram", 
@@ -199,12 +175,12 @@ diam.plot <- diam.plot + theme(axis.text.y = element_text(size = 15))
 diam.plot + scale_x_continuous(breaks = 0:9)
 ```
 
-![plot of chunk unnamed-chunk-3](figure/unnamed-chunk-3.png) 
+![plot of chunk unnamed-chunk-2](figure/unnamed-chunk-2.png) 
 
 
 
   
-The first step is to create the various adjacency matrices for each of the perturbed food chains. The code below will create the sign matrix structure for each perturbed chain of 2, 3, 4, 5, and 6 levels. A -1 indicates the impact of a predator on its prey (negative), while a 1 indicates the impact of the prey on the predator (positive). 
+The code below will create the sign matrix structure for each perturbed chain of 2, 3, 4, 5, and 6 levels. A -1 indicates the impact of a predator on its prey (negative), while a 1 indicates the impact of the prey on the predator (positive). 
   
 
 ```r
@@ -280,7 +256,7 @@ $`6 sp`
 
   
   
-### Figure 2  
+### Figure S2  
   
 These matrices can be visualized as presented in **Figure 2** with the following code (note: requires the igraph library):  
   
@@ -288,7 +264,6 @@ But first the sign matrices need to be converted to graph objects
 
 
 ```r
-
 graph.chains <- lapply(sign.matrices, graph.adjacency)
 ```
 
@@ -362,9 +337,11 @@ analyze.eigen <- function(m) {
 
 Simulation  
 --------------------------------------------------  
-     
+ 
 The following code applies the `analyze.eigen` function to each of the 5 sign matrices created above. It then stores the `max(Re(lambda))`, or the eigen value with the largest real part in the `eigenvalues` list. Quasi sign-stability (`qss`) can then be calculated by determining the proportion of the `max(Re(lambda))` that are negative out of the 10000 that are calculated. 
   
+
+
 
 ```r
 eigenvalues <- list()
@@ -384,16 +361,16 @@ $`2 sp`
 [1] 1
 
 $`3 sp`
-[1] 0.8597
+[1] 0.8574
 
 $`4 sp`
-[1] 0.4166
+[1] 0.414
 
 $`5 sp`
-[1] 0.0955
+[1] 0.1017
 
 $`6 sp`
-[1] 0.01
+[1] 0.0115
 ```
 
   
@@ -405,8 +382,6 @@ plot(unlist(qss) ~ c(2, 3, 4, 5, 6), ylim = c(0, 1), typ = "o", lty = 2, pch = 2
     bg = "black", xlab = "Number of Trophic Levels", ylab = "QSS")
 ```
 
-![plot of chunk QSSplot](figure/QSSplot.png) 
-
   
 Sensitivity Analysis  
 --------------------------------------------------  
@@ -416,7 +391,9 @@ We performed our sensitivity analysis by simply changing the distributions from 
 ### Sensitivity analysis 1  
   
 For this the impact of the predator on the prey was 1/2 the impact of the prey on the predator.  
-  
+
+
+
 
 ```r
 analyze.eigen.sensitivity1 <- function(m) {
@@ -452,23 +429,25 @@ $`2 sp`
 [1] 1
 
 $`3 sp`
-[1] 0.6674
+[1] 0.6654
 
 $`4 sp`
-[1] 0.3737
+[1] 0.3744
 
 $`5 sp`
-[1] 0.1813
+[1] 0.1794
 
 $`6 sp`
-[1] 0.0639
+[1] 0.0637
 ```
 
   
 ### Sensitivity analysis 2  
   
 For this the impact of the predator on the prey was 100x smaller.  
-  
+ 
+
+
 
 ```r
 analyze.eigen.sensitivity2 <- function(m) {
@@ -507,20 +486,22 @@ $`3 sp`
 [1] 1
 
 $`4 sp`
-[1] 0.6714
+[1] 0.674
 
 $`5 sp`
-[1] 0.1607
+[1] 0.1535
 
 $`6 sp`
-[1] 0.0099
+[1] 0.0108
 ```
 
   
 ### Sensitivity analysis 3  
   
 For this the impact of the predator on the prey was 1000x smaller.  
-  
+
+
+
 
 ```r
 analyze.eigen.sensitivity3 <- function(m) {
@@ -559,36 +540,43 @@ $`3 sp`
 [1] 1
 
 $`4 sp`
-[1] 0.9901
+[1] 0.9897
 
 $`5 sp`
-[1] 0.6069
+[1] 0.6007
 
 $`6 sp`
-[1] 0.118
+[1] 0.1197
 ```
 
+
   
-#### Create a plot of the different sensitivity analysis  
+### Figure 1  
+
+#### Figure 1a
   
 
 ```r
-plot(unlist(qss.sensitivity1) ~ c(2, 3, 4, 5, 6), ylim = c(0, 1), col = "blue", 
-    bg = "blue", pch = 24, typ = "o", lty = 3, xlab = "Number of Trophic Levels", 
-    ylab = "QSS")
-points(unlist(qss.sensitivity2) ~ c(2, 3, 4, 5, 6), col = "red", bg = "red", 
-    pch = 22, typ = "o", lty = 2)
-points(unlist(qss.sensitivity3) ~ c(2, 3, 4, 5, 6), col = "orange", bg = "orange", 
-    pch = 23, typ = "o", lty = 2)
+trophic.properties.URL <- getURL("https://raw.github.com/jjborrelli/Food-Chain-Length/master/Tables/NodeProperties.csv")
+trophic.properties <- read.csv(text = trophic.properties.URL)
+
+consumers <- which(round(trophic.properties$TL, 6) >= 2)
+
+# ggplot of distribution of trophic positions equal or higher than 2
+tc.plot <- qplot(trophic.properties$TL[consumers], binwidth = 0.8, geom = "histogram", 
+    xlab = "Trophic Position", ylab = "Frequency")
+tc.plot <- tc.plot + theme(axis.title.x = element_text(size = 20))
+tc.plot <- tc.plot + theme(axis.title.y = element_text(size = 20))
+tc.plot <- tc.plot + theme(axis.text.x = element_text(size = 15))
+tc.plot <- tc.plot + theme(axis.text.y = element_text(size = 15))
+tc.plot + scale_x_continuous(breaks = 1:6)
 ```
 
-![plot of chunk extraPlot](figure/extraPlot.png) 
+![plot of chunk unnamed-chunk-3](figure/unnamed-chunk-3.png) 
 
 
-### Figure 3   
-  
-Plot all together  
-  
+#### Figure 1b  
+
 
 ```r
 
@@ -621,5 +609,5 @@ qss.plot <- qss.plot + theme(axis.text.y = element_text(size = 18))
 qss.plot
 ```
 
-![plot of chunk Figure2](figure/Figure2.png) 
+<img src="figure/Figure2.png" title="plot of chunk Figure2" alt="plot of chunk Figure2" style="display: block; margin: auto;" />
 
