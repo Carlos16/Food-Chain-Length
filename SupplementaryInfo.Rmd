@@ -164,13 +164,14 @@ require(devtools)
 web.diameters.URL <- getURL("https://raw.github.com/jjborrelli/Food-Chain-Length/master/Tables/webDiameters.csv")
 web.diameters <- read.csv(text = web.diameters.URL)
 
-diam.plot<-qplot(web.diameters$Diameter, binwidth = .5, geom = "histogram", 
-               xlab = "Diameter", ylab = "Frequency")
-diam.plot <- diam.plot + theme(axis.title.x = element_text(size=20))
-diam.plot <- diam.plot + theme(axis.title.y = element_blank())
-diam.plot <- diam.plot + theme(axis.text.x = element_text(size=15))
-diam.plot <- diam.plot + theme(axis.text.y = element_text(size=15))
-diam.plot + scale_x_continuous(breaks = 0:9)
+diam.plot <- ggplot(web.diameters, aes(x = Diameter + 1, y = ..density..))
+diam.plot <- diam.plot + geom_histogram(breaks = seq(2.5, 9.5, 1))
+diam.plot <- diam.plot + theme(axis.title.x = element_text(size = 20))
+diam.plot <- diam.plot + theme(axis.title.y = element_text(size = 20))
+diam.plot <- diam.plot + theme(axis.text.x = element_text(size = 15))
+diam.plot <- diam.plot + theme(axis.text.y = element_text(size = 15))
+diam.plot <- diam.plot + scale_y_continuous(name = "Density")
+diam.plot + scale_x_continuous(name = "Longest Chain Length", breaks = 0:9)
 ```
 
 

@@ -166,13 +166,14 @@ require(devtools)
 web.diameters.URL <- getURL("https://raw.github.com/jjborrelli/Food-Chain-Length/master/Tables/webDiameters.csv")
 web.diameters <- read.csv(text = web.diameters.URL)
 
-diam.plot <- qplot(web.diameters$Diameter, binwidth = 0.5, geom = "histogram", 
-    xlab = "Diameter", ylab = "Frequency")
+diam.plot <- ggplot(web.diameters, aes(x = Diameter + 1, y = ..density..))
+diam.plot <- diam.plot + geom_histogram(breaks = seq(2.5, 9.5, 1))
 diam.plot <- diam.plot + theme(axis.title.x = element_text(size = 20))
-diam.plot <- diam.plot + theme(axis.title.y = element_blank())
+diam.plot <- diam.plot + theme(axis.title.y = element_text(size = 20))
 diam.plot <- diam.plot + theme(axis.text.x = element_text(size = 15))
 diam.plot <- diam.plot + theme(axis.text.y = element_text(size = 15))
-diam.plot + scale_x_continuous(breaks = 0:9)
+diam.plot <- diam.plot + scale_y_continuous(name = "Density")
+diam.plot + scale_x_continuous(name = "Longest Chain Length", breaks = 0:9)
 ```
 
 ![plot of chunk unnamed-chunk-2](figure/unnamed-chunk-2.png) 
@@ -563,13 +564,23 @@ trophic.properties <- read.csv(text = trophic.properties.URL)
 consumers <- which(round(trophic.properties$TL, 6) >= 2)
 
 # ggplot of distribution of trophic positions equal or higher than 2
-tc.plot <- qplot(trophic.properties$TL[consumers], binwidth = 0.8, geom = "histogram", 
-    xlab = "Trophic Position", ylab = "Frequency")
-tc.plot <- tc.plot + theme(axis.title.x = element_text(size = 20))
-tc.plot <- tc.plot + theme(axis.title.y = element_text(size = 20))
-tc.plot <- tc.plot + theme(axis.text.x = element_text(size = 15))
-tc.plot <- tc.plot + theme(axis.text.y = element_text(size = 15))
-tc.plot + scale_x_continuous(breaks = 1:6)
+tc.plot <- ggplot(trophic.properties[consumers, ], aes(x = TL))
+tc.plot <- tc.plot + geom_histogram(aes(y = ..density..), binwidth = 0.8, xlab = "Trophic Position", 
+    ylab = "Density")
+tc.plot <- tc.plot + theme(axis.title.x = element_text(size = 25))
+tc.plot <- tc.plot + theme(axis.title.y = element_text(size = 25))
+tc.plot <- tc.plot + theme(axis.text.x = element_text(size = 18))
+tc.plot <- tc.plot + theme(axis.text.y = element_text(size = 18))
+tc.plot + scale_x_continuous(breaks = 2:6, name = "Trophic Position") + scale_y_continuous(name = "Density")
+```
+
+```
+Mapping a variable to y and also using stat="bin".
+  With stat="bin", it will attempt to set the y value to the count of cases in each group.
+  This can result in unexpected behavior and will not be allowed in a future version of ggplot2.
+  If you want y to represent counts of cases, use stat="bin" and don't map a variable to y.
+  If you want y to represent values in the data, use stat="identity".
+  See ?geom_bar for examples. (Deprecated; last used in version 0.9.2)
 ```
 
 ![plot of chunk unnamed-chunk-3](figure/unnamed-chunk-3.png) 
