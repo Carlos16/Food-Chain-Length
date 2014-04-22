@@ -171,11 +171,15 @@ diam.plot <- diam.plot + theme(axis.title.y = element_text(size = 20))
 diam.plot <- diam.plot + theme(axis.text.x = element_text(size = 15))
 diam.plot <- diam.plot + theme(axis.text.y = element_text(size = 15))
 diam.plot <- diam.plot + scale_y_continuous(name = "Density")
-diam.plot + scale_x_continuous(name = "Longest Chain Length", breaks = 0:9)
+diam.plot <- diam.plot + scale_x_continuous(name = "Longest Chain Length", breaks = 0:9)
 ```
 
 
-  
+**Figure S1:** A histogram of the longest food chain in each of 50 food webs
+```{r, echo = F}
+diam.plot  
+```
+
 The code below will create the sign matrix structure for each perturbed chain of 2, 3, 4, 5, and 6 levels. A -1 indicates the impact of a predator on its prey (negative), while a 1 indicates the impact of the prey on the predator (positive). 
   
 ```{r createMATRICES}
@@ -207,14 +211,13 @@ These matrices are combined into a list for simplicity:
 ```{r listing}
 sign.matrices<-list(sign2,sign3,sign4,sign5,sign6)
 names(sign.matrices)<-c("2 sp","3 sp","4 sp","5 sp","6 sp")
-
 sign.matrices
 ```
   
   
 ### Figure S2  
   
-These matrices can be visualized as presented in **Figure 2** with the following code (note: requires the igraph library):  
+These matrices can be visualized with the following code (note: requires the igraph library):  
   
 But first the sign matrices need to be converted to graph objects
 
@@ -260,7 +263,25 @@ for(i in 1:5){
 ```
 
 Create the plot
-```{r chainPlot, fig.height = 10, fig.width = 5}
+```{r chainPlot, eval = F}
+par(mfrow=c(5, 1),mar=c(.5, .5, .5, .5))
+for(i in 1:5){
+  plot.igraph(graph.chains[[i]], layout = layouts[[i]],
+              vertex.size = 40,
+              vertex.color = "black",
+              vertex.label.color = "white",
+              vertex.label.cex = 1.5,
+              edge.width = 3,
+              edge.arrow.size = .75,
+              frame = T)
+  text(2, 1, label = text[i], cex = 1.5)
+}
+
+```
+
+**Figure S2:** Plot of each of the 5 food webs analyzed in the paper. The longest chain is highlighed in each case 
+
+```{r chainPlotRAN, fig.height = 10, fig.width = 5}
 par(mfrow=c(5, 1),mar=c(.5, .5, .5, .5))
 for(i in 1:5){
   plot.igraph(graph.chains[[i]], layout = layouts[[i]],
@@ -439,7 +460,7 @@ qss.sensitivity3
 
 #### Figure 1a
   
-```{r}
+```{r, message = F}
 trophic.properties.URL <- getURL("https://raw.github.com/jjborrelli/Food-Chain-Length/master/Tables/NodeProperties.csv")
 trophic.properties <- read.csv(text = trophic.properties.URL)
 
@@ -462,6 +483,7 @@ tc.plot + scale_x_continuous(breaks = 2:6, name = "Trophic Position") + scale_y_
 
 qtab <- list(qss, qss.sensitivity2, qss.sensitivity3, qss.sensitivity1)
 names(qtab) <- c("U (-1.0, 0)", "U (-0.1, 0)", "U (-0.01, 0)", "U (-5.0, 0)")
+
 
 qss.data <- melt(qtab, id = c("2 sp", "3 sp", "4 sp", "5 sp", "6 sp"))
 colnames(qss.data) <- c("QSS", "Levels", "Distribution")

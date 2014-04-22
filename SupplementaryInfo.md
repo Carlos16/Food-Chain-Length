@@ -173,14 +173,15 @@ diam.plot <- diam.plot + theme(axis.title.y = element_text(size = 20))
 diam.plot <- diam.plot + theme(axis.text.x = element_text(size = 15))
 diam.plot <- diam.plot + theme(axis.text.y = element_text(size = 15))
 diam.plot <- diam.plot + scale_y_continuous(name = "Density")
-diam.plot + scale_x_continuous(name = "Longest Chain Length", breaks = 0:9)
+diam.plot <- diam.plot + scale_x_continuous(name = "Longest Chain Length", breaks = 0:9)
 ```
 
-![plot of chunk unnamed-chunk-2](figure/unnamed-chunk-2.png) 
 
 
+**Figure S1:** A histogram of the longest food chain in each of 50 food webs
+![plot of chunk unnamed-chunk-3](figure/unnamed-chunk-3.png) 
 
-  
+
 The code below will create the sign matrix structure for each perturbed chain of 2, 3, 4, 5, and 6 levels. A -1 indicates the impact of a predator on its prey (negative), while a 1 indicates the impact of the prey on the predator (positive). 
   
 
@@ -214,7 +215,6 @@ These matrices are combined into a list for simplicity:
 ```r
 sign.matrices <- list(sign2, sign3, sign4, sign5, sign6)
 names(sign.matrices) <- c("2 sp", "3 sp", "4 sp", "5 sp", "6 sp")
-
 sign.matrices
 ```
 
@@ -259,7 +259,7 @@ $`6 sp`
   
 ### Figure S2  
   
-These matrices can be visualized as presented in **Figure 2** with the following code (note: requires the igraph library):  
+These matrices can be visualized with the following code (note: requires the igraph library):  
   
 But first the sign matrices need to be converted to graph objects
 
@@ -306,9 +306,24 @@ for (i in 1:5) {
         edge.width = 3, edge.arrow.size = 0.75, frame = T)
     text(2, 1, label = text[i], cex = 1.5)
 }
+
 ```
 
-![plot of chunk chainPlot](figure/chainPlot.png) 
+
+**Figure S2:** Plot of each of the 5 food webs analyzed in the paper. The longest chain is highlighed in each case 
+
+
+```r
+par(mfrow = c(5, 1), mar = c(0.5, 0.5, 0.5, 0.5))
+for (i in 1:5) {
+    plot.igraph(graph.chains[[i]], layout = layouts[[i]], vertex.size = 40, 
+        vertex.color = "black", vertex.label.color = "white", vertex.label.cex = 1.5, 
+        edge.width = 3, edge.arrow.size = 0.75, frame = T)
+    text(2, 1, label = text[i], cex = 1.5)
+}
+```
+
+![plot of chunk chainPlotRAN](figure/chainPlotRAN.png) 
 
   
 ### Defining the function to calculate stability  
@@ -574,16 +589,7 @@ tc.plot <- tc.plot + theme(axis.text.y = element_text(size = 18))
 tc.plot + scale_x_continuous(breaks = 2:6, name = "Trophic Position") + scale_y_continuous(name = "Density")
 ```
 
-```
-Mapping a variable to y and also using stat="bin".
-  With stat="bin", it will attempt to set the y value to the count of cases in each group.
-  This can result in unexpected behavior and will not be allowed in a future version of ggplot2.
-  If you want y to represent counts of cases, use stat="bin" and don't map a variable to y.
-  If you want y to represent values in the data, use stat="identity".
-  See ?geom_bar for examples. (Deprecated; last used in version 0.9.2)
-```
-
-![plot of chunk unnamed-chunk-3](figure/unnamed-chunk-3.png) 
+![plot of chunk unnamed-chunk-4](figure/unnamed-chunk-4.png) 
 
 
 #### Figure 1b  
@@ -593,6 +599,7 @@ Mapping a variable to y and also using stat="bin".
 
 qtab <- list(qss, qss.sensitivity2, qss.sensitivity3, qss.sensitivity1)
 names(qtab) <- c("U (-1.0, 0)", "U (-0.1, 0)", "U (-0.01, 0)", "U (-5.0, 0)")
+
 
 qss.data <- melt(qtab, id = c("2 sp", "3 sp", "4 sp", "5 sp", "6 sp"))
 colnames(qss.data) <- c("QSS", "Levels", "Distribution")
