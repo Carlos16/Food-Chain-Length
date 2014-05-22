@@ -114,7 +114,7 @@ testLENGTH <- function(webiter = 200, maxchain = 9, totalINT = 14, params){
 pars <- data.frame(pred = c(10, 10, 10, 5, 5, 5, 1, 1, 1), prey = c(-1, -5, -10, -1, -5, -10, -1, -5, -10))
 ints <- c(12, 16, 20, 24, 28)
 
-
+i =2
 #totalDATA <- list()
 for(i in 7:nrow(pars)){
   chainDATA <- data.frame(QSS = c(), MaxTL = c(), MeanTL = c(), MedTL = c(), ints = factor())
@@ -138,9 +138,15 @@ head(totalDATA2[[1]])
 
 totalDAT <- do.call(rbind, totalDATA2)
 require(ggplot2)
-ggplot(totalDAT, aes(x = MaxTL, y = QSS)) + geom_point(aes(col = ints)) + geom_smooth(aes(col = ints), method = "glm") + facet_wrap(~scenario)
-ggplot(totalDAT, aes(x = MeanTL, y = QSS)) + geom_point(aes(col = ints)) + geom_smooth(aes(col = ints), method = "glm") + facet_wrap(~scenario)
 ggplot(totalDAT, aes(x = MedTL, y = QSS)) + geom_point(aes(col = ints)) + geom_smooth(aes(col = ints), method = "glm") + facet_wrap(~scenario)
+ggplot(totalDAT, aes(x = MeanTL, y = QSS)) + geom_point(aes(col = ints)) + geom_smooth(aes(col = ints), method = "glm") + facet_wrap(~scenario)
+ggplot(totalDAT, aes(x = MaxTL, y = QSS)) + 
+  geom_point(aes(col = ints)) + 
+  geom_smooth(aes(col = ints), method = "glm") + 
+  facet_wrap(~scenario) + 
+  scale_x_continuous(breaks = 2:15)
+
+#ggsave("medtlPLOT2.png", width = 9, height = 7, dpi = 600)
 
 getwd()
 save.image("chainINFO.Rdata")
