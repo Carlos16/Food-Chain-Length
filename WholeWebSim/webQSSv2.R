@@ -58,12 +58,14 @@ webLIST <- function(n, int, maxchain = 9){
 
 loopars <- function(matlist, pars){
   require(data.table)
+  pardat <- list()
   for(i in 1:nrow(pars)){
     d <- lapply(matlist, getQSS, params = pars[i,])
-    d2[[i]] <- rbindlist(d)
-    d2[[i]]$scenario <- factor(rep(paste(pars[i,], collapse = "/"), nrow(d2[[i]])))
+    d2 <- rbindlist(d)
+    d2$scenario <- rep(paste(pars[i,], collapse = "/"), nrow(d2))
+    pardat[[i]] <- d2
   }
-  data <- rbindlist(d2)
+  data <- rbindlist(pardat)
   return(data)
 }
 
@@ -71,14 +73,24 @@ QSSwrapper <- function(n, numints, params){
   data <- list()
   for(i in 1:length(numints)){
     wl <- webLIST(n, numints[i], maxchain = 9)
-    data[[i]] <- loopars(wl, pars)
-    data[[i]]$ints <- factor(rep(numints[i]), nrow(data[[i]]))
-    cat(i/length(numints)*100, "% done", "\n")
+    data[[i]] <- loopars(wl, params)
+    data[[i]]$ints <- rep(numints[i], nrow(data[[i]]))
+    cat(i/length(numints)*100, "% done", "\n", sep = "")
   }
   return(rbindlist(data))
 }
 
 webQSS<- QSSwrapper(n = 200, numints = ints, params = pars)
+
+require(doSNOW)
+require(foreach)
+cl <- makeCluster(2, type = "SOCK")
+
+clusterExport(cl, c("QSSwrapper", "webLIST", "loopars", "getQSS", "randomWEBS", "maxRE", "ran.unif", "eig.analysis"))
+
+registerDoSNOW(cl)
+
+foreach(n = 2) %dopar% QSSwrapper(n, numints = ints, params = pars)
 
 require(ggplot2)
 ggplot(d2, aes(x = maxtl, y = qss)) + geom_point() + geom_smooth(method = "glm")

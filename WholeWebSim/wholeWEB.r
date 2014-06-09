@@ -138,15 +138,32 @@ head(totalDATA2[[1]])
 
 totalDAT <- do.call(rbind, totalDATA2)
 require(ggplot2)
-ggplot(totalDAT, aes(x = MedTL, y = QSS)) + geom_point(aes(col = ints)) + geom_smooth(aes(col = ints), method = "glm") + facet_wrap(~scenario)
-ggplot(totalDAT, aes(x = MeanTL, y = QSS)) + geom_point(aes(col = ints)) + geom_smooth(aes(col = ints), method = "glm") + facet_wrap(~scenario)
+
+ggplot(totalDAT, aes(x = MedTL, y = QSS)) + geom_point(aes(col = ints)) +
+  geom_smooth(aes(lty = ints), method = "glm") + facet_wrap(~scenario)
+
+ggplot(totalDAT, aes(x = MeanTL, y = QSS)) + geom_point(aes(col = ints)) +
+  geom_smooth(aes(col = ints), method = "glm") + facet_wrap(~scenario)
+
 ggplot(totalDAT, aes(x = MaxTL, y = QSS)) + 
   geom_point(aes(col = ints)) + 
   geom_smooth(aes(col = ints), method = "glm") + 
   facet_wrap(~scenario) + 
   scale_x_continuous(breaks = 2:15)
 
-#ggsave("medtlPLOT2.png", width = 9, height = 7, dpi = 600)
+#ggsave("meantlPLOT3.png", width = 9, height = 7, dpi = 600)
+
+l <- levels(totalDAT$ints)[c(1,2,3)]
+
+ggplot(totalDAT[totalDAT$ints == l,], aes(x = MeanTL, y = QSS)) +
+  geom_point(aes(shape = ints), size = 1.5, alpha = .75) +
+  geom_smooth(aes(lty = ints), lwd = 1, method = "glm") + 
+  theme_bw() + xlab("Mean Trophic Postion") + ylab("Quasi Sign-Stability") +
+  facet_wrap(~scenario)
+
+
 
 getwd()
 save.image("chainINFO.Rdata")
+setwd("C:/Users/borre_000/Desktop/GitHub/Food-Chain-Length/WholeWebSim/")
+load("chainINFO.Rdata")

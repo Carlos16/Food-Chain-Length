@@ -161,8 +161,7 @@ require(devtools)
 ### Figure S1
 ```{r}
 
-web.diameters.URL <- getURL("https://raw.github.com/jjborrelli/Food-Chain-Length/master/Tables/webDiameters.csv")
-web.diameters <- read.csv(text = web.diameters.URL)
+web.diameters <- read.csv("https://raw.githubusercontent.com/jjborrelli/Food-Chain-Length/master/Tables/webDiameters.csv", row.names = 1)
 
 diam.plot <- ggplot(web.diameters, aes(x = Diameter + 1, y = ..density..))
 diam.plot <- diam.plot + geom_histogram(breaks = seq(2.5, 9.5, 1))
@@ -296,6 +295,9 @@ for(i in 1:5){
 }
 
 ```
+```{r devoff, echo = F}
+dev.off()
+```
   
 ### Defining the function to calculate stability  
 
@@ -351,125 +353,224 @@ plot(unlist(qss)~c(2,3,4,5,6),
 Sensitivity Analysis  
 --------------------------------------------------  
   
-We performed our sensitivity analysis by simply changing the distributions from which we sampled for the impact of the predator on the prey. The initial simulations were done with the impact of the predator on the prey 10x smaller on average than the reverse impact. This was accomplished with a slight alteration of the `analyze.eigen` function that filled the matrix and calculated the eigenvalues. 
+### Functions 
 
-### Sensitivity analysis 1  
+For more indepth analysis of the impact of chain length, asymmetry of interaction strength, connectance, and density dependence on stability we used a slightly modified version of the functions used above.
+
+The `ran.unif` function fills in a sign structured matrix with random values drawn from a random uniform distribution. The impact of the prey on the predator population is drawn from a distribution between 0 and `pred`, while the impact of the predator on the prey is distributed between `prey` and 0. 
+
+
+```{r randomFILL}
+ran.unif <- function(motmat, pred = 10, prey = -1, random = F){
+  newmat <- apply(motmat, c(1,2), function(x){
+    if(x==1){runif(1, 0, pred)}else if(x==-1){runif(1, prey, 0)} else{0}
+  })
+  if(random){
+    diag(newmat) <- runif(length(diag(newmat)), -1, 0)
+  }else{diag(newmat) <- -1}
   
-For this the impact of the predator on the prey was 1/2 the impact of the prey on the predator.  
-
-```{r setSEED2, echo = F}
-set.seed(10)
+  return(newmat)
+}
 ```
-```{r Sensitivity1}
-analyze.eigen.sensitivity1<-function(m){
-  for(i in 1:nrow(m)){
-    for (j in 1:nrow(m)){
-      ifelse(m[i,j]==1,m[i,j]<-runif(1,0,10),NA)
-      ifelse(m[i,j]==-1,m[i,j]<-runif(1,-5,0),NA)  #note the difference in distribution here
+
+The `maxRE` computes the largest eigenvalue and returns the real part. 
+
+```{r}
+maxRE <- function(rmat){
+  lam.max <- max(Re(eigen(rmat)$values))
+  return(lam.max)
+}
+
+```
+
+The `eig.analysis` function takes an imput of a list of matrices and randomly fills it according to `ran.unif` (above) `n` times and computes `maxRE` for each iteration.
+
+```{r}
+eig.analysis <- function(n, matrices, params){
+  cols <- length(matrices)
+  rows <- n
+  eigenMATRIX <- matrix(nrow = rows, ncol = cols)
+  for(i in 1:n){
+    ranmat <- lapply(matrices, ran.unif, pred = params[,1],
+                     prey = params[,2], random = T)
+    eigs <- sapply(ranmat, maxRE)
+    eigenMATRIX[i,] <- eigs
+  }
+  return(eigenMATRIX)
+}
+```
+
+The `conversion` function takes in an adjacency matrix and converts it into  sign matrix, assuming all interactions are predator/prey (+/-).
+
+```{r}
+conversion <- function(tm){
+  for(i in 1:nrow(tm)){
+    for(j in 1:ncol(tm)){
+      if(tm[i,j] == 1){tm[j,i] <- -1}
     }
   }
-  for(i in 1:nrow(m)){
-    if(m[i,i]<0){m[i,i]<--1}
-  }
-  ev<-max(Re(eigen(m)$values))
-  return(ev)
+  return(tm)
 }
-
-eigenvalues.sensitivity1<-list()
-qss.sensitivity1<-list()
-for(i in 1:5){
-  eigenvalues.sensitivity1[[i]]<-replicate(10000,analyze.eigen.sensitivity1(sign.matrices[[i]]))
-  qss.sensitivity1[[i]]<-sum(eigenvalues.sensitivity1[[i]]<0)/10000
-}
-
-names(eigenvalues.sensitivity1)<-c("2 sp","3 sp","4 sp","5 sp","6 sp")
-names(qss.sensitivity1)<-c("2 sp","3 sp","4 sp","5 sp", "6 sp")
-qss.sensitivity1
 ```
-  
-### Sensitivity analysis 2  
-  
-For this the impact of the predator on the prey was 100x smaller.  
- 
-```{r setSEED3, echo = F}
-set.seed(15)
-``` 
-```{r Sensitivity2}
-analyze.eigen.sensitivity2<-function(m){
-  for(i in 1:nrow(m)){
-    for (j in 1:nrow(m)){
-      ifelse(m[i,j]==1,m[i,j]<-runif(1,0,10),NA)
-      ifelse(m[i,j]==-1,m[i,j]<-runif(1,-0.1,0),NA)  #note the difference in distribution here
+
+The `randomQSS` function generates `numweb` random webs with `total` number of interactions. The `chain` argument determines the length of the initial chain the web is seeded with. Distributions for the relative impacts of predator and prey on eachother are determined by the values in the `params` argument. For each random web max, mean, and median trophic position are computed along with quasi sign-stability. Quasi sign-stability is calculated by randomly parameterizing each matrix 1000 times and determining the proportion that are stable. 
+
+```{r}
+randomQSS <- function(numweb = 200, chain = 9, total = 14, params){
+  require(NetIndices)
+  mywebs <- list()
+  for(j in 1:numweb){
+    
+    check <- 1
+    while(!check == 0){
+      myweb <- matrix(0, nrow = 10, ncol = 10)
+      for(i in 1:chain){
+        myweb[i,i+1] <- 1
+      }
+      tophalf <- which(myweb[upper.tri(myweb)] == 0)
+      newones <- sample(tophalf, total-chain)
+      myweb[upper.tri(myweb)][newones] <- 1
+      mywebs[[j]] <- myweb
+      
+      indeg <- apply(myweb, 1, sum)
+      outdeg <- apply(myweb, 2, sum)
+      deg <- indeg + outdeg
+      
+      if(sum(deg == 0) >= 1){check <- 1}else{check <- 0}
+      
     }
+    
   }
-  for(i in 1:nrow(m)){
-    if(m[i,i]<0){m[i,i]<--1}
-  }
-  ev<-max(Re(eigen(m)$values))
-  return(ev)
+  
+  mywebs1 <- lapply(mywebs, conversion)
+  myweb.tl <- lapply(mywebs, TrophInd)
+  emat <- eig.analysis(1000, mywebs1, params, mode = "unif")
+  qss <- apply(emat, 2, function(x){sum(x<0)/1000})
+  mtl <- sapply(myweb.tl, max)
+  
+  return(list(webs = mywebs, trophics = myweb.tl, eigs = emat, qss = qss, maxTL = mtl))
 }
 
-eigenvalues.sensitivity2<-list()
-qss.sensitivity2<-list()
-for(i in 1:5){
-  eigenvalues.sensitivity2[[i]]<-replicate(10000,analyze.eigen.sensitivity2(sign.matrices[[i]]))
-  qss.sensitivity2[[i]]<-sum(eigenvalues.sensitivity2[[i]]<0)/10000
+```
+
+The `testLENGTH` function iterates through each possible seed chain length. 
+
+```{r}
+
+testLENGTH <- function(webiter = 200, maxchain = 9, totalINT = 14, params){
+  qssLIST <- list()
+  mtlLIST <- list()
+  troLIST <- list()
+  for(i in 1:maxchain){
+    cat(i, "\n")
+    test <- randomQSS(numweb = webiter, chain = i, total = totalINT, params = params)
+    qssLIST[[i]] <- test$qss
+    mtlLIST[[i]] <- test$maxTL
+    troLIST[[i]] <- lapply(test$trophics, function(x){x$TL})
+  }
+  quas <- unlist(qssLIST)
+  maxtl <- unlist(mtlLIST)
+  meantl<- rapply(troLIST, mean)
+  medtl <- rapply(troLIST, median)
+  
+  data <- data.frame(QSS = quas, MaxTL = maxtl, MeanTL = meantl, MedTL = medtl)
+  
+  return(data)
 }
 
-names(eigenvalues.sensitivity2)<-c("2 sp","3 sp","4 sp","5 sp","6 sp")
-names(qss.sensitivity2)<-c("2 sp","3 sp","4 sp","5 sp", "6 sp")
-qss.sensitivity2
+```
+
+### Simulation
+
+
+```{r}
+
+pars <- data.frame(pred = c(10, 10, 10, 5, 5, 5, 1, 1, 1), prey = c(-1, -5, -10, -1, -5, -10, -1, -5, -10))
+ints <- c(12, 16, 20, 24, 28)
+
+```
+
+
+```{r totalSIM, eval = F}
+totalDATA <- list()
+for(i in 1:nrow(pars)){
+  chainDATA <- data.frame(QSS = c(), MaxTL = c(), MeanTL = c(), MedTL = c(), ints = factor())
+  for(j in 1:length(ints)){
+    chain <- testLENGTH(webiter = 100, maxchain = 9, totalINT = ints[j], params = pars[i,])
+    chain <- cbind(chain, ints = factor(rep(ints[j], 900)))
+    chainDATA <- rbind(chainDATA, chain)
+    cat("\n", ints[j], "is done", "\n")
+  }
+  totalDATA[[i]] <- chainDATA
+  cat("\n", i, "th par done", "\n")
+  # each item of the list corresponds to the row of parameters
+}
+
+totalDATA2 <- list()
+for(i in 1:9){
+  totalDATA2[[i]] <- cbind(totalDATA[[i]], scenario = paste(pars[i,], collapse = "/"))
+}
+
+head(totalDATA2[[1]])
+
+totalDAT <- do.call(rbind, totalDATA2)
+
+```
+
+```{r, echo = F}
+load("C:/Users/borre_000/Desktop/GitHub/Food-Chain-Length/WholeWebSim")
 ```
   
-### Sensitivity analysis 3  
-  
-For this the impact of the predator on the prey was 1000x smaller.  
+### Figure S3
 
-```{r setSEED4, echo = F}
-set.seed(20)
+**Figure S3:** Plot of quasi sign-stability against mean trophic position. Each panel represents different degrees of asymmetry in the relative impacts of predators on their prey and vice versa.
+
+```{r}
+ggplot(totalDAT, aes(x = MeanTL, y = QSS)) +
+  geom_point(aes(col = ints)) +
+  geom_smooth(aes(lty = ints), method = "glm") +
+  facet_wrap(~scenario)
 ```
-```{r Sensitivity3}
-analyze.eigen.sensitivity3<-function(m){
-  for(i in 1:nrow(m)){
-    for (j in 1:nrow(m)){
-      ifelse(m[i,j]==1,m[i,j]<-runif(1,0,10),NA)
-      ifelse(m[i,j]==-1,m[i,j]<-runif(1,-0.01,0),NA)  #note the difference in distribution here
-    }
-  }
-  for(i in 1:nrow(m)){
-    if(m[i,i]<0){m[i,i]<--1}
-  }
-  ev<-max(Re(eigen(m)$values))
-  return(ev)
-}
 
-eigenvalues.sensitivity3<-list()
-qss.sensitivity3<-list()
-for(i in 1:5){
-  eigenvalues.sensitivity3[[i]]<-replicate(10000,analyze.eigen.sensitivity3(sign.matrices[[i]]))
-  qss.sensitivity3[[i]]<-sum(eigenvalues.sensitivity3[[i]]<0)/10000
-}
+### Figure S4
 
-names(eigenvalues.sensitivity3)<-c("2 sp","3 sp","4 sp","5 sp","6 sp")
-names(qss.sensitivity3)<-c("2 sp","3 sp","4 sp","5 sp", "6 sp")
-qss.sensitivity3
-```  
+**Figure S4:** Plot of quasi sign-stability against median trophic position. Each panel represents different degrees of asymmetry in the relative impacts of predators on their prey and vice versa.
 
+```{r}
+ggplot(totalDAT, aes(x = MedTL, y = QSS)) +
+  geom_point(aes(col = ints)) + 
+  geom_smooth(aes(col = ints), method = "glm") + 
+  facet_wrap(~scenario)
+```
+
+### Figure S5
+
+**Figure S5:** Plot of quasi sign-stability against maximum trophic position. Each panel represents different degrees of asymmetry in the relative impacts of predators on their prey and vice versa. 
+
+```{r}
+ggplot(totalDAT, aes(x = MaxTL, y = QSS)) + 
+  geom_point(aes(col = ints)) + 
+  geom_smooth(aes(col = ints), method = "glm") + 
+  facet_wrap(~scenario) + 
+  scale_x_continuous(breaks = 2:15)
+```
   
+Code for Figures in the Manuscript
+-------------------------------------------
+
 ### Figure 1  
 
 #### Figure 1a
   
-```{r, message = F}
-trophic.properties.URL <- getURL("https://raw.github.com/jjborrelli/Food-Chain-Length/master/Tables/NodeProperties.csv")
-trophic.properties <- read.csv(text = trophic.properties.URL)
+```{r fig1a, message = F}
+trophic.properties <- read.csv("https://raw.githubusercontent.com/jjborrelli/Food-Chain-Length/master/Tables/NodeProperties.csv", row.names = 1)
 
 consumers <- which(round(trophic.properties$TL, 6) >= 2)
 
 # ggplot of distribution of trophic positions equal or higher than 2
-tc.plot <- ggplot(trophic.properties[consumers,], aes(x = TL)) 
-tc.plot <- tc.plot + geom_histogram(aes(y = ..density..), binwidth = .8, 
-                                    xlab = "Trophic Position", ylab = "Density")
+tc.plot <- ggplot(trophic.properties[consumers,], aes(x = TL, y = ..density..)) + theme_bw()
+
+tc.plot <- tc.plot + geom_histogram(binwidth = .8) + xlab("Trophic Position") + ylab("Density")
 tc.plot <- tc.plot + theme(axis.title.x = element_text(size = 25))
 tc.plot <- tc.plot + theme(axis.title.y = element_text(size = 25))
 tc.plot <- tc.plot + theme(axis.text.x = element_text(size = 18))
@@ -479,30 +580,31 @@ tc.plot + scale_x_continuous(breaks = 2:6, name = "Trophic Position") + scale_y_
 
 #### Figure 1b  
 
-```{r setupFigure2}
+```{r setupFigure1b}
 
-qtab <- list(qss, qss.sensitivity2, qss.sensitivity3, qss.sensitivity1)
-names(qtab) <- c("U (-1.0, 0)", "U (-0.1, 0)", "U (-0.01, 0)", "U (-5.0, 0)")
+qss.plot <- qplot(2:6, unlist(qss), xlab = "Number of Trophic Levels", ylab = "Quasi Sign-
+                  Stability", margin = T)
+qss.plot <- qss.plot + geom_point(size = 4)
+qss.plot <- qss.plot + geom_line()
 
-
-qss.data <- melt(qtab, id = c("2 sp", "3 sp", "4 sp", "5 sp", "6 sp"))
-colnames(qss.data) <- c("QSS", "Levels", "Distribution")
-qss.data$Levels <- c(2, 3, 4, 5, 6, 2, 3, 4, 5, 6, 2, 3, 4, 5, 6, 2, 3, 4, 5, 6)
-qss.data$Distribution2 <- factor(qss.data$Distribution, 
-                     levels = (c("U (-1.0, 0)", "U (-0.1, 0)", "U (-0.01, 0)", "U (-5.0, 0)")))
-
-
-qss.plot <- qplot(Levels, QSS, data = qss.data, xlab = "Number of Trophic Levels", margin = T)
-qss.plot <- qss.plot + geom_point(aes(shape = qss.data$Distribution2), size = 4) 
-qss.plot <- qss.plot + geom_line(aes(linetype = qss.data$Distribution2))
-qss.plot <- qss.plot + theme(legend.title = element_blank()) 
-qss.plot <- qss.plot + theme(legend.key.size = unit(2, "cm"), legend.text = element_text(size = 20))
-qss.plot <- qss.plot + theme(axis.title.x = element_text(size=25))
-qss.plot <- qss.plot + theme(axis.title.y = element_text(size=25))
+qss.plot <- qss.plot + theme(axis.title.x = element_text(size=22))
+qss.plot <- qss.plot + theme(axis.title.y = element_text(size=22))
 qss.plot <- qss.plot + theme(axis.text.x = element_text(size=18))
 qss.plot <- qss.plot + theme(axis.text.y = element_text(size=18))
 ```
 
-```{r Figure2, fig.width = 10, fig.height = 10, fig.align = "center"}
+```{r Figure1, fig.width = 10, fig.height = 10, fig.align = "center"}
 qss.plot
 ```
+
+### Figure 2
+
+```{r}
+l <- levels(totalDAT$ints)[c(1,2,3)]
+
+ggplot(totalDAT[totalDAT$ints == l,], aes(x = MeanTL, y = QSS)) +
+  geom_point(aes(shape = ints), size = 1.5, alpha = .75) +
+  geom_smooth(aes(lty = ints), lwd = 1, method = "glm") + 
+  theme_bw() + xlab("Mean Trophic Postion") + ylab("Quasi Sign-Stability") +
+  facet_wrap(~scenario)
+  ```

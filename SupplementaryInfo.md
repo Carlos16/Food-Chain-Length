@@ -2,7 +2,6 @@ Supplementary Information
 ==================================================================================
 
 
-
 Data
 -----------------------------------------------------------------------------------------------  
 ### Data Sources
@@ -158,63 +157,123 @@ require(devtools)
 ```
 
 
-
 ### Figure S1
 
 ```r
+web.diameters <- read.csv("https://raw.githubusercontent.com/jjborrelli/Food-Chain-Length/master/Tables/webDiameters.csv", row.names = 1)
+```
 
-web.diameters.URL <- getURL("https://raw.github.com/jjborrelli/Food-Chain-Length/master/Tables/webDiameters.csv")
-web.diameters <- read.csv(text = web.diameters.URL)
+```
+Warning: unsupported URL scheme
+```
 
+```
+Error: cannot open the connection
+```
+
+```r
 diam.plot <- ggplot(web.diameters, aes(x = Diameter + 1, y = ..density..))
+```
+
+```
+Error: object 'web.diameters' not found
+```
+
+```r
 diam.plot <- diam.plot + geom_histogram(breaks = seq(2.5, 9.5, 1))
+```
+
+```
+Error: object 'diam.plot' not found
+```
+
+```r
 diam.plot <- diam.plot + theme(axis.title.x = element_text(size = 20))
+```
+
+```
+Error: object 'diam.plot' not found
+```
+
+```r
 diam.plot <- diam.plot + theme(axis.title.y = element_text(size = 20))
+```
+
+```
+Error: object 'diam.plot' not found
+```
+
+```r
 diam.plot <- diam.plot + theme(axis.text.x = element_text(size = 15))
+```
+
+```
+Error: object 'diam.plot' not found
+```
+
+```r
 diam.plot <- diam.plot + theme(axis.text.y = element_text(size = 15))
+```
+
+```
+Error: object 'diam.plot' not found
+```
+
+```r
 diam.plot <- diam.plot + scale_y_continuous(name = "Density")
+```
+
+```
+Error: object 'diam.plot' not found
+```
+
+```r
 diam.plot <- diam.plot + scale_x_continuous(name = "Longest Chain Length", breaks = 0:9)
 ```
 
+```
+Error: object 'diam.plot' not found
+```
 
 
 **Figure S1:** A histogram of the longest food chain in each of 50 food webs
-![plot of chunk unnamed-chunk-3](figure/unnamed-chunk-3.png) 
 
+```
+Error: object 'diam.plot' not found
+```
 
 The code below will create the sign matrix structure for each perturbed chain of 2, 3, 4, 5, and 6 levels. A -1 indicates the impact of a predator on its prey (negative), while a 1 indicates the impact of the prey on the predator (positive). 
   
 
 ```r
-sign2 <- matrix(c(-1, -1, 1, 0), nrow = 2, ncol = 2)
-diag(sign2) <- -1
+sign2<-matrix(c(-1,-1,1,0),nrow=2,ncol=2)
+diag(sign2)<--1
 
-sign3 <- matrix(c(-1, -1, -1, 1, 0, -1, 1, 1, 0), nrow = 3, ncol = 3)
-diag(sign3) <- -1
+sign3<-matrix(c(-1,-1,-1,1,0,-1,1,1,0),nrow=3,ncol=3)
+diag(sign3)<--1
 
-sign4 <- matrix(nrow = 4, ncol = 4)
-sign4[lower.tri(sign4)] <- -1
-sign4[upper.tri(sign4)] <- 1
-diag(sign4) <- -1
+sign4<-matrix(nrow=4,ncol=4)
+sign4[lower.tri(sign4)]<--1
+sign4[upper.tri(sign4)]<-1
+diag(sign4)<--1
 
-sign5 <- matrix(nrow = 5, ncol = 5)
-sign5[lower.tri(sign5)] <- -1
-sign5[upper.tri(sign5)] <- 1
-diag(sign5) <- -1
+sign5<-matrix(nrow=5,ncol=5)
+sign5[lower.tri(sign5)]<--1
+sign5[upper.tri(sign5)]<-1
+diag(sign5)<--1
 
-sign6 <- matrix(nrow = 6, ncol = 6)
-sign6[lower.tri(sign6)] <- -1
-sign6[upper.tri(sign6)] <- 1
-diag(sign6) <- -1
+sign6<-matrix(nrow=6,ncol=6)
+sign6[lower.tri(sign6)]<--1
+sign6[upper.tri(sign6)]<-1
+diag(sign6)<--1
 ```
-
   
 These matrices are combined into a list for simplicity: 
   
 
 ```r
-sign.matrices <- list(sign2, sign3, sign4, sign5, sign6)
-names(sign.matrices) <- c("2 sp", "3 sp", "4 sp", "5 sp", "6 sp")
+sign.matrices<-list(sign2,sign3,sign4,sign5,sign6)
+names(sign.matrices)<-c("2 sp","3 sp","4 sp","5 sp","6 sp")
 sign.matrices
 ```
 
@@ -254,7 +313,6 @@ $`6 sp`
 [5,]   -1   -1   -1   -1   -1    1
 [6,]   -1   -1   -1   -1   -1   -1
 ```
-
   
   
 ### Figure S2  
@@ -265,66 +323,88 @@ But first the sign matrices need to be converted to graph objects
 
 
 ```r
-graph.chains <- lapply(sign.matrices, graph.adjacency)
+graph.chains<-lapply(sign.matrices,graph.adjacency)
 ```
-
   
 The layout is defined for each node of each chain:  
   
 
 ```r
+twospec2<-matrix(c(1,1,
+                  2,2),nrow=2,ncol=2,byrow=T)
+threespec2<-matrix(c(1,1,
+                    3,1,
+                    2,2),nrow=3,ncol=2,byrow=T)
+fourspec2<-matrix(c(1,1,
+                   2,2,
+                   0,2,
+                   1,3),nrow=4,ncol=2,byrow=T)
+fivespec2<-matrix(c(2,1,
+                   3,2,
+                   1,2,
+                   3,3,
+                   1,3),nrow=5,ncol=2,byrow=T)
+sixspec2<-matrix(c(2,1,
+                  3,2,
+                  1,2,
+                  3,3,
+                  1,3,
+                  2,4),nrow=6,ncol=2,byrow=T)
 
-twospec2 <- matrix(c(1, 1, 2, 2), nrow = 2, ncol = 2, byrow = T)
-threespec2 <- matrix(c(1, 1, 3, 1, 2, 2), nrow = 3, ncol = 2, byrow = T)
-fourspec2 <- matrix(c(1, 1, 2, 2, 0, 2, 1, 3), nrow = 4, ncol = 2, byrow = T)
-fivespec2 <- matrix(c(2, 1, 3, 2, 1, 2, 3, 3, 1, 3), nrow = 5, ncol = 2, byrow = T)
-sixspec2 <- matrix(c(2, 1, 3, 2, 1, 2, 3, 3, 1, 3, 2, 4), nrow = 6, ncol = 2, 
-    byrow = T)
-
-layouts <- list(twospec2, threespec2, fourspec2, fivespec2, sixspec2)
-text <- c("a", "b", "c", "d", "e")
+layouts<-list(twospec2,threespec2,fourspec2,fivespec2,sixspec2)
+text<-c("a","b","c","d","e")
 ```
-
 
 Setting the plotting options to highlight the longest chain in each web:  
 
 ```r
-for (i in 1:5) {
-    E(graph.chains[[i]])$color = "darkslategray4"
-    E(graph.chains[[i]], path = c(1:(i + 1)))$color = "darkslategrey"
+for(i in 1:5){
+  E(graph.chains[[i]])$color = "darkslategray4"
+  E(graph.chains[[i]], path = c(1:(i+1)))$color = "darkslategrey"
 }
 ```
-
 
 Create the plot
 
 ```r
-par(mfrow = c(5, 1), mar = c(0.5, 0.5, 0.5, 0.5))
-for (i in 1:5) {
-    plot.igraph(graph.chains[[i]], layout = layouts[[i]], vertex.size = 40, 
-        vertex.color = "black", vertex.label.color = "white", vertex.label.cex = 1.5, 
-        edge.width = 3, edge.arrow.size = 0.75, frame = T)
-    text(2, 1, label = text[i], cex = 1.5)
+par(mfrow=c(5, 1),mar=c(.5, .5, .5, .5))
+for(i in 1:5){
+  plot.igraph(graph.chains[[i]], layout = layouts[[i]],
+              vertex.size = 40,
+              vertex.color = "black",
+              vertex.label.color = "white",
+              vertex.label.cex = 1.5,
+              edge.width = 3,
+              edge.arrow.size = .75,
+              frame = T)
+  text(2, 1, label = text[i], cex = 1.5)
 }
-
 ```
-
 
 **Figure S2:** Plot of each of the 5 food webs analyzed in the paper. The longest chain is highlighed in each case 
 
 
 ```r
-par(mfrow = c(5, 1), mar = c(0.5, 0.5, 0.5, 0.5))
-for (i in 1:5) {
-    plot.igraph(graph.chains[[i]], layout = layouts[[i]], vertex.size = 40, 
-        vertex.color = "black", vertex.label.color = "white", vertex.label.cex = 1.5, 
-        edge.width = 3, edge.arrow.size = 0.75, frame = T)
-    text(2, 1, label = text[i], cex = 1.5)
+par(mfrow=c(5, 1),mar=c(.5, .5, .5, .5))
+for(i in 1:5){
+  plot.igraph(graph.chains[[i]], layout = layouts[[i]],
+              vertex.size = 40,
+              vertex.color = "black",
+              vertex.label.color = "white",
+              vertex.label.cex = 1.5,
+              edge.width = 3,
+              edge.arrow.size = .75,
+              frame = T)
+  text(2, 1, label = text[i], cex = 1.5)
 }
 ```
 
 ![plot of chunk chainPlotRAN](figure/chainPlotRAN.png) 
 
+```
+null device 
+          1 
+```
   
 ### Defining the function to calculate stability  
 
@@ -332,23 +412,20 @@ The function `analyze.eigen` randomly fills a signed matrix and calculates the e
   
 
 ```r
-analyze.eigen <- function(m) {
-    for (i in 1:nrow(m)) {
-        for (j in 1:nrow(m)) {
-            ifelse(m[i, j] == 1, m[i, j] <- runif(1, 0, 10), NA)
-            ifelse(m[i, j] == -1, m[i, j] <- runif(1, -1, 0), NA)
-        }
+analyze.eigen<-function(m){
+  for(i in 1:nrow(m)){
+    for (j in 1:nrow(m)){
+      ifelse(m[i,j]==1,m[i,j]<-runif(1,0,10),NA)
+      ifelse(m[i,j]==-1,m[i,j]<-runif(1,-1,0),NA)
     }
-    for (i in 1:nrow(m)) {
-        if (m[i, i] < 0) {
-            m[i, i] <- -1
-        }
-    }
-    ev <- max(Re(eigen(m)$values))
-    return(ev)
+  }
+  for(i in 1:nrow(m)){
+    if(m[i,i]<0){m[i,i]<--1}
+  }
+  ev<-max(Re(eigen(m)$values))
+  return(ev)
 }
 ```
-
   
 
 Simulation  
@@ -358,17 +435,16 @@ The following code applies the `analyze.eigen` function to each of the 5 sign ma
   
 
 
-
 ```r
-eigenvalues <- list()
-qss <- list()
-for (i in 1:5) {
-    eigenvalues[[i]] <- replicate(10000, analyze.eigen(sign.matrices[[i]]))
-    qss[[i]] <- sum(eigenvalues[[i]] < 0)/10000
+eigenvalues<-list()
+qss<-list()
+for(i in 1:5){
+  eigenvalues[[i]]<-replicate(10000,analyze.eigen(sign.matrices[[i]]))
+  qss[[i]]<-sum(eigenvalues[[i]]<0)/10000
 }
 
-names(eigenvalues) <- c("2 sp", "3 sp", "4 sp", "5 sp", "6 sp")
-names(qss) <- c("2 sp", "3 sp", "4 sp", "5 sp", "6 sp")
+names(eigenvalues)<-c("2 sp","3 sp","4 sp","5 sp","6 sp")
+names(qss)<-c("2 sp","3 sp","4 sp","5 sp", "6 sp")
 qss
 ```
 
@@ -388,244 +464,371 @@ $`5 sp`
 $`6 sp`
 [1] 0.0115
 ```
-
   
 The results can then be plotted with `qss` as a function of the number of levels:
   
 
 ```r
-plot(unlist(qss) ~ c(2, 3, 4, 5, 6), ylim = c(0, 1), typ = "o", lty = 2, pch = 21, 
-    bg = "black", xlab = "Number of Trophic Levels", ylab = "QSS")
+plot(unlist(qss)~c(2,3,4,5,6),  
+     ylim=c(0,1), typ="o", lty=2, pch=21, bg="black",  
+     xlab="Number of Trophic Levels",  
+     ylab="QSS")
 ```
-
   
 Sensitivity Analysis  
 --------------------------------------------------  
   
-We performed our sensitivity analysis by simply changing the distributions from which we sampled for the impact of the predator on the prey. The initial simulations were done with the impact of the predator on the prey 10x smaller on average than the reverse impact. This was accomplished with a slight alteration of the `analyze.eigen` function that filled the matrix and calculated the eigenvalues. 
+### Functions 
 
-### Sensitivity analysis 1  
-  
-For this the impact of the predator on the prey was 1/2 the impact of the prey on the predator.  
+For more indepth analysis of the impact of chain length, asymmetry of interaction strength, connectance, and density dependence on stability we used a slightly modified version of the functions used above.
 
-
-
-
-```r
-analyze.eigen.sensitivity1 <- function(m) {
-    for (i in 1:nrow(m)) {
-        for (j in 1:nrow(m)) {
-            ifelse(m[i, j] == 1, m[i, j] <- runif(1, 0, 10), NA)
-            ifelse(m[i, j] == -1, m[i, j] <- runif(1, -5, 0), NA)  #note the difference in distribution here
-        }
-    }
-    for (i in 1:nrow(m)) {
-        if (m[i, i] < 0) {
-            m[i, i] <- -1
-        }
-    }
-    ev <- max(Re(eigen(m)$values))
-    return(ev)
-}
-
-eigenvalues.sensitivity1 <- list()
-qss.sensitivity1 <- list()
-for (i in 1:5) {
-    eigenvalues.sensitivity1[[i]] <- replicate(10000, analyze.eigen.sensitivity1(sign.matrices[[i]]))
-    qss.sensitivity1[[i]] <- sum(eigenvalues.sensitivity1[[i]] < 0)/10000
-}
-
-names(eigenvalues.sensitivity1) <- c("2 sp", "3 sp", "4 sp", "5 sp", "6 sp")
-names(qss.sensitivity1) <- c("2 sp", "3 sp", "4 sp", "5 sp", "6 sp")
-qss.sensitivity1
-```
-
-```
-$`2 sp`
-[1] 1
-
-$`3 sp`
-[1] 0.6654
-
-$`4 sp`
-[1] 0.3744
-
-$`5 sp`
-[1] 0.1794
-
-$`6 sp`
-[1] 0.0637
-```
-
-  
-### Sensitivity analysis 2  
-  
-For this the impact of the predator on the prey was 100x smaller.  
- 
+The `ran.unif` function fills in a sign structured matrix with random values drawn from a random uniform distribution. The impact of the prey on the predator population is drawn from a distribution between 0 and `pred`, while the impact of the predator on the prey is distributed between `prey` and 0. 
 
 
 
 ```r
-analyze.eigen.sensitivity2 <- function(m) {
-    for (i in 1:nrow(m)) {
-        for (j in 1:nrow(m)) {
-            ifelse(m[i, j] == 1, m[i, j] <- runif(1, 0, 10), NA)
-            ifelse(m[i, j] == -1, m[i, j] <- runif(1, -0.1, 0), NA)  #note the difference in distribution here
-        }
-    }
-    for (i in 1:nrow(m)) {
-        if (m[i, i] < 0) {
-            m[i, i] <- -1
-        }
-    }
-    ev <- max(Re(eigen(m)$values))
-    return(ev)
-}
-
-eigenvalues.sensitivity2 <- list()
-qss.sensitivity2 <- list()
-for (i in 1:5) {
-    eigenvalues.sensitivity2[[i]] <- replicate(10000, analyze.eigen.sensitivity2(sign.matrices[[i]]))
-    qss.sensitivity2[[i]] <- sum(eigenvalues.sensitivity2[[i]] < 0)/10000
-}
-
-names(eigenvalues.sensitivity2) <- c("2 sp", "3 sp", "4 sp", "5 sp", "6 sp")
-names(qss.sensitivity2) <- c("2 sp", "3 sp", "4 sp", "5 sp", "6 sp")
-qss.sensitivity2
-```
-
-```
-$`2 sp`
-[1] 1
-
-$`3 sp`
-[1] 1
-
-$`4 sp`
-[1] 0.674
-
-$`5 sp`
-[1] 0.1535
-
-$`6 sp`
-[1] 0.0108
-```
-
+ran.unif <- function(motmat, pred = 10, prey = -1, random = F){
+  newmat <- apply(motmat, c(1,2), function(x){
+    if(x==1){runif(1, 0, pred)}else if(x==-1){runif(1, prey, 0)} else{0}
+  })
+  if(random){
+    diag(newmat) <- runif(length(diag(newmat)), -1, 0)
+  }else{diag(newmat) <- -1}
   
-### Sensitivity analysis 3  
-  
-For this the impact of the predator on the prey was 1000x smaller.  
+  return(newmat)
+}
+```
 
+The `maxRE` computes the largest eigenvalue and returns the real part. 
+
+
+```r
+maxRE <- function(rmat){
+  lam.max <- max(Re(eigen(rmat)$values))
+  return(lam.max)
+}
+```
+
+The `eig.analysis` function takes an imput of a list of matrices and randomly fills it according to `ran.unif` (above) `n` times and computes `maxRE` for each iteration.
+
+
+```r
+eig.analysis <- function(n, matrices, params){
+  cols <- length(matrices)
+  rows <- n
+  eigenMATRIX <- matrix(nrow = rows, ncol = cols)
+  for(i in 1:n){
+    ranmat <- lapply(matrices, ran.unif, pred = params[,1],
+                     prey = params[,2], random = T)
+    eigs <- sapply(ranmat, maxRE)
+    eigenMATRIX[i,] <- eigs
+  }
+  return(eigenMATRIX)
+}
+```
+
+The `conversion` function takes in an adjacency matrix and converts it into  sign matrix, assuming all interactions are predator/prey (+/-).
+
+
+```r
+conversion <- function(tm){
+  for(i in 1:nrow(tm)){
+    for(j in 1:ncol(tm)){
+      if(tm[i,j] == 1){tm[j,i] <- -1}
+    }
+  }
+  return(tm)
+}
+```
+
+The `randomQSS` function generates `numweb` random webs with `total` number of interactions. The `chain` argument determines the length of the initial chain the web is seeded with. Distributions for the relative impacts of predator and prey on eachother are determined by the values in the `params` argument. For each random web max, mean, and median trophic position are computed along with quasi sign-stability. Quasi sign-stability is calculated by randomly parameterizing each matrix 1000 times and determining the proportion that are stable. 
+
+
+```r
+randomQSS <- function(numweb = 200, chain = 9, total = 14, params){
+  require(NetIndices)
+  mywebs <- list()
+  for(j in 1:numweb){
+    
+    check <- 1
+    while(!check == 0){
+      myweb <- matrix(0, nrow = 10, ncol = 10)
+      for(i in 1:chain){
+        myweb[i,i+1] <- 1
+      }
+      tophalf <- which(myweb[upper.tri(myweb)] == 0)
+      newones <- sample(tophalf, total-chain)
+      myweb[upper.tri(myweb)][newones] <- 1
+      mywebs[[j]] <- myweb
+      
+      indeg <- apply(myweb, 1, sum)
+      outdeg <- apply(myweb, 2, sum)
+      deg <- indeg + outdeg
+      
+      if(sum(deg == 0) >= 1){check <- 1}else{check <- 0}
+      
+    }
+    
+  }
+  
+  mywebs1 <- lapply(mywebs, conversion)
+  myweb.tl <- lapply(mywebs, TrophInd)
+  emat <- eig.analysis(1000, mywebs1, params, mode = "unif")
+  qss <- apply(emat, 2, function(x){sum(x<0)/1000})
+  mtl <- sapply(myweb.tl, max)
+  
+  return(list(webs = mywebs, trophics = myweb.tl, eigs = emat, qss = qss, maxTL = mtl))
+}
+```
+
+The `testLENGTH` function iterates through each possible seed chain length. 
+
+
+```r
+testLENGTH <- function(webiter = 200, maxchain = 9, totalINT = 14, params){
+  qssLIST <- list()
+  mtlLIST <- list()
+  troLIST <- list()
+  for(i in 1:maxchain){
+    cat(i, "\n")
+    test <- randomQSS(numweb = webiter, chain = i, total = totalINT, params = params)
+    qssLIST[[i]] <- test$qss
+    mtlLIST[[i]] <- test$maxTL
+    troLIST[[i]] <- lapply(test$trophics, function(x){x$TL})
+  }
+  quas <- unlist(qssLIST)
+  maxtl <- unlist(mtlLIST)
+  meantl<- rapply(troLIST, mean)
+  medtl <- rapply(troLIST, median)
+  
+  data <- data.frame(QSS = quas, MaxTL = maxtl, MeanTL = meantl, MedTL = medtl)
+  
+  return(data)
+}
+```
+
+### Simulation
 
 
 
 ```r
-analyze.eigen.sensitivity3 <- function(m) {
-    for (i in 1:nrow(m)) {
-        for (j in 1:nrow(m)) {
-            ifelse(m[i, j] == 1, m[i, j] <- runif(1, 0, 10), NA)
-            ifelse(m[i, j] == -1, m[i, j] <- runif(1, -0.01, 0), NA)  #note the difference in distribution here
-        }
-    }
-    for (i in 1:nrow(m)) {
-        if (m[i, i] < 0) {
-            m[i, i] <- -1
-        }
-    }
-    ev <- max(Re(eigen(m)$values))
-    return(ev)
+pars <- data.frame(pred = c(10, 10, 10, 5, 5, 5, 1, 1, 1), prey = c(-1, -5, -10, -1, -5, -10, -1, -5, -10))
+ints <- c(12, 16, 20, 24, 28)
+```
+
+
+
+```r
+totalDATA <- list()
+for(i in 1:nrow(pars)){
+  chainDATA <- data.frame(QSS = c(), MaxTL = c(), MeanTL = c(), MedTL = c(), ints = factor())
+  for(j in 1:length(ints)){
+    chain <- testLENGTH(webiter = 100, maxchain = 9, totalINT = ints[j], params = pars[i,])
+    chain <- cbind(chain, ints = factor(rep(ints[j], 900)))
+    chainDATA <- rbind(chainDATA, chain)
+    cat("\n", ints[j], "is done", "\n")
+  }
+  totalDATA[[i]] <- chainDATA
+  cat("\n", i, "th par done", "\n")
+  # each item of the list corresponds to the row of parameters
 }
 
-eigenvalues.sensitivity3 <- list()
-qss.sensitivity3 <- list()
-for (i in 1:5) {
-    eigenvalues.sensitivity3[[i]] <- replicate(10000, analyze.eigen.sensitivity3(sign.matrices[[i]]))
-    qss.sensitivity3[[i]] <- sum(eigenvalues.sensitivity3[[i]] < 0)/10000
+totalDATA2 <- list()
+for(i in 1:9){
+  totalDATA2[[i]] <- cbind(totalDATA[[i]], scenario = paste(pars[i,], collapse = "/"))
 }
 
-names(eigenvalues.sensitivity3) <- c("2 sp", "3 sp", "4 sp", "5 sp", "6 sp")
-names(qss.sensitivity3) <- c("2 sp", "3 sp", "4 sp", "5 sp", "6 sp")
-qss.sensitivity3
-```
+head(totalDATA2[[1]])
 
-```
-$`2 sp`
-[1] 1
-
-$`3 sp`
-[1] 1
-
-$`4 sp`
-[1] 0.9897
-
-$`5 sp`
-[1] 0.6007
-
-$`6 sp`
-[1] 0.1197
+totalDAT <- do.call(rbind, totalDATA2)
 ```
 
 
+```
+Warning: cannot open compressed file
+'C:/Users/borre_000/Desktop/GitHub/Food-Chain-Length/WholeWebSim',
+probable reason 'Permission denied'
+```
+
+```
+Error: cannot open the connection
+```
   
+### Figure S3
+
+**Figure S3:** Plot of quasi sign-stability against mean trophic position. Each panel represents different degrees of asymmetry in the relative impacts of predators on their prey and vice versa.
+
+
+```r
+ggplot(totalDAT, aes(x = MeanTL, y = QSS)) +
+  geom_point(aes(col = ints)) +
+  geom_smooth(aes(lty = ints), method = "glm") +
+  facet_wrap(~scenario)
+```
+
+```
+Error: object 'totalDAT' not found
+```
+
+### Figure S4
+
+**Figure S4:** Plot of quasi sign-stability against median trophic position. Each panel represents different degrees of asymmetry in the relative impacts of predators on their prey and vice versa.
+
+
+```r
+ggplot(totalDAT, aes(x = MedTL, y = QSS)) +
+  geom_point(aes(col = ints)) + 
+  geom_smooth(aes(col = ints), method = "glm") + 
+  facet_wrap(~scenario)
+```
+
+```
+Error: object 'totalDAT' not found
+```
+
+### Figure S5
+
+**Figure S5:** Plot of quasi sign-stability against maximum trophic position. Each panel represents different degrees of asymmetry in the relative impacts of predators on their prey and vice versa. 
+
+
+```r
+ggplot(totalDAT, aes(x = MaxTL, y = QSS)) + 
+  geom_point(aes(col = ints)) + 
+  geom_smooth(aes(col = ints), method = "glm") + 
+  facet_wrap(~scenario) + 
+  scale_x_continuous(breaks = 2:15)
+```
+
+```
+Error: object 'totalDAT' not found
+```
+  
+Code for Figures in the Manuscript
+-------------------------------------------
+
 ### Figure 1  
 
 #### Figure 1a
   
 
 ```r
-trophic.properties.URL <- getURL("https://raw.github.com/jjborrelli/Food-Chain-Length/master/Tables/NodeProperties.csv")
-trophic.properties <- read.csv(text = trophic.properties.URL)
+trophic.properties <- read.csv("https://raw.githubusercontent.com/jjborrelli/Food-Chain-Length/master/Tables/NodeProperties.csv", row.names = 1)
+```
 
+```
+Warning: unsupported URL scheme
+```
+
+```
+Error: cannot open the connection
+```
+
+```r
 consumers <- which(round(trophic.properties$TL, 6) >= 2)
+```
 
+```
+Error: object 'trophic.properties' not found
+```
+
+```r
 # ggplot of distribution of trophic positions equal or higher than 2
-tc.plot <- ggplot(trophic.properties[consumers, ], aes(x = TL))
-tc.plot <- tc.plot + geom_histogram(aes(y = ..density..), binwidth = 0.8, xlab = "Trophic Position", 
-    ylab = "Density")
+tc.plot <- ggplot(trophic.properties[consumers,], aes(x = TL, y = ..density..)) + theme_bw()
+```
+
+```
+Error: object 'trophic.properties' not found
+```
+
+```r
+tc.plot <- tc.plot + geom_histogram(binwidth = .8) + xlab("Trophic Position") + ylab("Density")
+```
+
+```
+Error: object 'tc.plot' not found
+```
+
+```r
 tc.plot <- tc.plot + theme(axis.title.x = element_text(size = 25))
+```
+
+```
+Error: object 'tc.plot' not found
+```
+
+```r
 tc.plot <- tc.plot + theme(axis.title.y = element_text(size = 25))
+```
+
+```
+Error: object 'tc.plot' not found
+```
+
+```r
 tc.plot <- tc.plot + theme(axis.text.x = element_text(size = 18))
+```
+
+```
+Error: object 'tc.plot' not found
+```
+
+```r
 tc.plot <- tc.plot + theme(axis.text.y = element_text(size = 18))
+```
+
+```
+Error: object 'tc.plot' not found
+```
+
+```r
 tc.plot + scale_x_continuous(breaks = 2:6, name = "Trophic Position") + scale_y_continuous(name = "Density")
 ```
 
-![plot of chunk unnamed-chunk-4](figure/unnamed-chunk-4.png) 
-
+```
+Error: object 'tc.plot' not found
+```
 
 #### Figure 1b  
 
 
 ```r
+qss.plot <- qplot(2:6, unlist(qss), xlab = "Number of Trophic Levels", ylab = "Quasi Sign-
+                  Stability", margin = T)
+qss.plot <- qss.plot + geom_point(size = 4)
+qss.plot <- qss.plot + geom_line()
 
-qtab <- list(qss, qss.sensitivity2, qss.sensitivity3, qss.sensitivity1)
-names(qtab) <- c("U (-1.0, 0)", "U (-0.1, 0)", "U (-0.01, 0)", "U (-5.0, 0)")
-
-
-qss.data <- melt(qtab, id = c("2 sp", "3 sp", "4 sp", "5 sp", "6 sp"))
-colnames(qss.data) <- c("QSS", "Levels", "Distribution")
-qss.data$Levels <- c(2, 3, 4, 5, 6, 2, 3, 4, 5, 6, 2, 3, 4, 5, 6, 2, 3, 4, 5, 
-    6)
-qss.data$Distribution2 <- factor(qss.data$Distribution, levels = (c("U (-1.0, 0)", 
-    "U (-0.1, 0)", "U (-0.01, 0)", "U (-5.0, 0)")))
-
-
-qss.plot <- qplot(Levels, QSS, data = qss.data, xlab = "Number of Trophic Levels", 
-    margin = T)
-qss.plot <- qss.plot + geom_point(aes(shape = qss.data$Distribution2), size = 4)
-qss.plot <- qss.plot + geom_line(aes(linetype = qss.data$Distribution2))
-qss.plot <- qss.plot + theme(legend.title = element_blank())
-qss.plot <- qss.plot + theme(legend.key.size = unit(2, "cm"), legend.text = element_text(size = 20))
-qss.plot <- qss.plot + theme(axis.title.x = element_text(size = 25))
-qss.plot <- qss.plot + theme(axis.title.y = element_text(size = 25))
-qss.plot <- qss.plot + theme(axis.text.x = element_text(size = 18))
-qss.plot <- qss.plot + theme(axis.text.y = element_text(size = 18))
+qss.plot <- qss.plot + theme(axis.title.x = element_text(size=22))
+qss.plot <- qss.plot + theme(axis.title.y = element_text(size=22))
+qss.plot <- qss.plot + theme(axis.text.x = element_text(size=18))
+qss.plot <- qss.plot + theme(axis.text.y = element_text(size=18))
 ```
-
 
 
 ```r
 qss.plot
 ```
 
-<img src="figure/Figure2.png" title="plot of chunk Figure2" alt="plot of chunk Figure2" style="display: block; margin: auto;" />
+<img src="figure/Figure1.png" title="plot of chunk Figure1" alt="plot of chunk Figure1" style="display: block; margin: auto;" />
 
+### Figure 2
+
+
+```r
+l <- levels(totalDAT$ints)[c(1,2,3)]
+```
+
+```
+Error: object 'totalDAT' not found
+```
+
+```r
+ggplot(totalDAT[totalDAT$ints == l,], aes(x = MeanTL, y = QSS)) +
+  geom_point(aes(shape = ints), size = 1.5, alpha = .75) +
+  geom_smooth(aes(lty = ints), lwd = 1, method = "glm") + 
+  theme_bw() + xlab("Mean Trophic Postion") + ylab("Quasi Sign-Stability") +
+  facet_wrap(~scenario)
+```
+
+```
+Error: object 'totalDAT' not found
+```
