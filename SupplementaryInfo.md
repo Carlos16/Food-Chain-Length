@@ -1,4 +1,4 @@
-Supplementary Information
+Appendix A
 ==================================================================================
 
 
@@ -160,87 +160,24 @@ require(devtools)
 ### Figure S1
 
 ```r
-web.diameters <- read.csv("https://raw.githubusercontent.com/jjborrelli/Food-Chain-Length/master/Tables/webDiameters.csv", row.names = 1)
-```
+path <- getURL("https://raw.githubusercontent.com/jjborrelli/Food-Chain-Length/master/Tables/webDiameters.csv",
+               ssl.verifypeer=0L, followlocation=1L)
 
-```
-Warning: unsupported URL scheme
-```
+web.diameters <- read.csv(text = path, row.names = 1)
 
-```
-Error: cannot open the connection
-```
-
-```r
 diam.plot <- ggplot(web.diameters, aes(x = Diameter + 1, y = ..density..))
-```
-
-```
-Error: object 'web.diameters' not found
-```
-
-```r
 diam.plot <- diam.plot + geom_histogram(breaks = seq(2.5, 9.5, 1))
-```
-
-```
-Error: object 'diam.plot' not found
-```
-
-```r
 diam.plot <- diam.plot + theme(axis.title.x = element_text(size = 20))
-```
-
-```
-Error: object 'diam.plot' not found
-```
-
-```r
 diam.plot <- diam.plot + theme(axis.title.y = element_text(size = 20))
-```
-
-```
-Error: object 'diam.plot' not found
-```
-
-```r
 diam.plot <- diam.plot + theme(axis.text.x = element_text(size = 15))
-```
-
-```
-Error: object 'diam.plot' not found
-```
-
-```r
 diam.plot <- diam.plot + theme(axis.text.y = element_text(size = 15))
-```
-
-```
-Error: object 'diam.plot' not found
-```
-
-```r
 diam.plot <- diam.plot + scale_y_continuous(name = "Density")
-```
-
-```
-Error: object 'diam.plot' not found
-```
-
-```r
 diam.plot <- diam.plot + scale_x_continuous(name = "Longest Chain Length", breaks = 0:9)
-```
-
-```
-Error: object 'diam.plot' not found
 ```
 
 
 **Figure S1:** A histogram of the longest food chain in each of 50 food webs
-
-```
-Error: object 'diam.plot' not found
-```
+![plot of chunk unnamed-chunk-3](figure/unnamed-chunk-3.png) 
 
 The code below will create the sign matrix structure for each perturbed chain of 2, 3, 4, 5, and 6 levels. A -1 indicates the impact of a predator on its prey (negative), while a 1 indicates the impact of the prey on the predator (positive). 
   
@@ -401,10 +338,6 @@ for(i in 1:5){
 
 ![plot of chunk chainPlotRAN](figure/chainPlotRAN.png) 
 
-```
-null device 
-          1 
-```
   
 ### Defining the function to calculate stability  
 
@@ -644,15 +577,6 @@ totalDAT <- do.call(rbind, totalDATA2)
 ```
 
 
-```
-Warning: cannot open compressed file
-'C:/Users/borre_000/Desktop/GitHub/Food-Chain-Length/WholeWebSim',
-probable reason 'Permission denied'
-```
-
-```
-Error: cannot open the connection
-```
   
 ### Figure S3
 
@@ -666,9 +590,7 @@ ggplot(totalDAT, aes(x = MeanTL, y = QSS)) +
   facet_wrap(~scenario)
 ```
 
-```
-Error: object 'totalDAT' not found
-```
+![plot of chunk unnamed-chunk-11](figure/unnamed-chunk-11.png) 
 
 ### Figure S4
 
@@ -682,9 +604,7 @@ ggplot(totalDAT, aes(x = MedTL, y = QSS)) +
   facet_wrap(~scenario)
 ```
 
-```
-Error: object 'totalDAT' not found
-```
+![plot of chunk unnamed-chunk-12](figure/unnamed-chunk-12.png) 
 
 ### Figure S5
 
@@ -699,9 +619,7 @@ ggplot(totalDAT, aes(x = MaxTL, y = QSS)) +
   scale_x_continuous(breaks = 2:15)
 ```
 
-```
-Error: object 'totalDAT' not found
-```
+![plot of chunk unnamed-chunk-13](figure/unnamed-chunk-13.png) 
   
 Code for Figures in the Manuscript
 -------------------------------------------
@@ -712,81 +630,24 @@ Code for Figures in the Manuscript
   
 
 ```r
-trophic.properties <- read.csv("https://raw.githubusercontent.com/jjborrelli/Food-Chain-Length/master/Tables/NodeProperties.csv", row.names = 1)
-```
+path2 <- getURL("https://raw.githubusercontent.com/jjborrelli/Food-Chain-Length/master/Tables/NodeProperties.csv",
+               ssl.verifypeer=0L, followlocation=1L)
+trophic.properties <- read.csv(text = path2, row.names = 1)
 
-```
-Warning: unsupported URL scheme
-```
-
-```
-Error: cannot open the connection
-```
-
-```r
 consumers <- which(round(trophic.properties$TL, 6) >= 2)
-```
 
-```
-Error: object 'trophic.properties' not found
-```
-
-```r
 # ggplot of distribution of trophic positions equal or higher than 2
 tc.plot <- ggplot(trophic.properties[consumers,], aes(x = TL, y = ..density..)) + theme_bw()
-```
 
-```
-Error: object 'trophic.properties' not found
-```
-
-```r
 tc.plot <- tc.plot + geom_histogram(binwidth = .8) + xlab("Trophic Position") + ylab("Density")
-```
-
-```
-Error: object 'tc.plot' not found
-```
-
-```r
 tc.plot <- tc.plot + theme(axis.title.x = element_text(size = 25))
-```
-
-```
-Error: object 'tc.plot' not found
-```
-
-```r
 tc.plot <- tc.plot + theme(axis.title.y = element_text(size = 25))
-```
-
-```
-Error: object 'tc.plot' not found
-```
-
-```r
 tc.plot <- tc.plot + theme(axis.text.x = element_text(size = 18))
-```
-
-```
-Error: object 'tc.plot' not found
-```
-
-```r
 tc.plot <- tc.plot + theme(axis.text.y = element_text(size = 18))
-```
-
-```
-Error: object 'tc.plot' not found
-```
-
-```r
 tc.plot + scale_x_continuous(breaks = 2:6, name = "Trophic Position") + scale_y_continuous(name = "Density")
 ```
 
-```
-Error: object 'tc.plot' not found
-```
+![plot of chunk fig1a](figure/fig1a.png) 
 
 #### Figure 1b  
 
@@ -815,13 +676,7 @@ qss.plot
 
 ```r
 l <- levels(totalDAT$ints)[c(1,2,3)]
-```
 
-```
-Error: object 'totalDAT' not found
-```
-
-```r
 ggplot(totalDAT[totalDAT$ints == l,], aes(x = MeanTL, y = QSS)) +
   geom_point(aes(shape = ints), size = 1.5, alpha = .75) +
   geom_smooth(aes(lty = ints), lwd = 1, method = "glm") + 
@@ -829,6 +684,4 @@ ggplot(totalDAT[totalDAT$ints == l,], aes(x = MeanTL, y = QSS)) +
   facet_wrap(~scenario)
 ```
 
-```
-Error: object 'totalDAT' not found
-```
+![plot of chunk unnamed-chunk-14](figure/unnamed-chunk-14.png) 

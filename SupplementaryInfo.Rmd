@@ -1,4 +1,4 @@
-Supplementary Information
+Appendix A
 ==================================================================================
 ```{r, echo = FALSE}
 opts_chunk$set(comment = NA, eval = T)
@@ -161,7 +161,10 @@ require(devtools)
 ### Figure S1
 ```{r}
 
-web.diameters <- read.csv("https://raw.githubusercontent.com/jjborrelli/Food-Chain-Length/master/Tables/webDiameters.csv", row.names = 1)
+path <- getURL("https://raw.githubusercontent.com/jjborrelli/Food-Chain-Length/master/Tables/webDiameters.csv",
+               ssl.verifypeer=0L, followlocation=1L)
+
+web.diameters <- read.csv(text = path, row.names = 1)
 
 diam.plot <- ggplot(web.diameters, aes(x = Diameter + 1, y = ..density..))
 diam.plot <- diam.plot + geom_histogram(breaks = seq(2.5, 9.5, 1))
@@ -295,9 +298,7 @@ for(i in 1:5){
 }
 
 ```
-```{r devoff, echo = F}
-dev.off()
-```
+
   
 ### Defining the function to calculate stability  
 
@@ -518,7 +519,7 @@ totalDAT <- do.call(rbind, totalDATA2)
 ```
 
 ```{r, echo = F}
-load("C:/Users/borre_000/Desktop/GitHub/Food-Chain-Length/WholeWebSim")
+load("C:/Users/borre_000/Desktop/GitHub/Food-Chain-Length/WholeWebSim//chainINFO.Rdata")
 ```
   
 ### Figure S3
@@ -563,7 +564,9 @@ Code for Figures in the Manuscript
 #### Figure 1a
   
 ```{r fig1a, message = F}
-trophic.properties <- read.csv("https://raw.githubusercontent.com/jjborrelli/Food-Chain-Length/master/Tables/NodeProperties.csv", row.names = 1)
+path2 <- getURL("https://raw.githubusercontent.com/jjborrelli/Food-Chain-Length/master/Tables/NodeProperties.csv",
+               ssl.verifypeer=0L, followlocation=1L)
+trophic.properties <- read.csv(text = path2, row.names = 1)
 
 consumers <- which(round(trophic.properties$TL, 6) >= 2)
 
@@ -593,7 +596,7 @@ qss.plot <- qss.plot + theme(axis.text.x = element_text(size=18))
 qss.plot <- qss.plot + theme(axis.text.y = element_text(size=18))
 ```
 
-```{r Figure1, fig.width = 10, fig.height = 10, fig.align = "center"}
+```{r Figure1, fig.width = 8, fig.height = 8, fig.align = "center"}
 qss.plot
 ```
 
