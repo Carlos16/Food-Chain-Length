@@ -177,7 +177,7 @@ diam.plot <- diam.plot + scale_x_continuous(name = "Longest Chain Length", break
 ```
 
 
-**Figure S1:** A histogram of the longest food chain in each of 50 food webs
+**Figure A1:** A histogram of the longest food chain in each of 50 food webs
 ```{r, echo = F}
 diam.plot  
 ```
@@ -217,7 +217,7 @@ sign.matrices
 ```
   
   
-### Figure S2  
+### Figure A2  
   
 These matrices can be visualized with the following code (note: requires the igraph library):  
   
@@ -281,7 +281,7 @@ for(i in 1:5){
 
 ```
 
-**Figure S2:** Plot of each of the 5 food webs analyzed in the paper. The longest chain is highlighed in each case 
+**Figure A2:** Plot of each of the 5 food webs analyzed in the paper. The longest chain is highlighed in each case 
 
 ```{r chainPlotRAN, fig.height = 10, fig.width = 5}
 par(mfrow=c(5, 1),mar=c(.5, .5, .5, .5))

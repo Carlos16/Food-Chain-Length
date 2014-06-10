@@ -176,7 +176,7 @@ diam.plot <- diam.plot + scale_x_continuous(name = "Longest Chain Length", break
 ```
 
 
-**Figure S1:** A histogram of the longest food chain in each of 50 food webs
+**Figure A1:** A histogram of the longest food chain in each of 50 food webs
 ![plot of chunk unnamed-chunk-3](figure/unnamed-chunk-3.png) 
 
 The code below will create the sign matrix structure for each perturbed chain of 2, 3, 4, 5, and 6 levels. A -1 indicates the impact of a predator on its prey (negative), while a 1 indicates the impact of the prey on the predator (positive). 
@@ -252,7 +252,7 @@ $`6 sp`
 ```
   
   
-### Figure S2  
+### Figure A2  
   
 These matrices can be visualized with the following code (note: requires the igraph library):  
   
@@ -318,7 +318,7 @@ for(i in 1:5){
 }
 ```
 
-**Figure S2:** Plot of each of the 5 food webs analyzed in the paper. The longest chain is highlighed in each case 
+**Figure A2:** Plot of each of the 5 food webs analyzed in the paper. The longest chain is highlighed in each case 
 
 
 ```r
