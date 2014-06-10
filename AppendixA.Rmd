@@ -564,8 +564,7 @@ Code for Figures in the Manuscript
 #### Figure 1a
   
 ```{r fig1a, message = F}
-path2 <- getURL("https://raw.githubusercontent.com/jjborrelli/Food-Chain-Length/master/Tables/NodeProperties.csv",
-               ssl.verifypeer=0L, followlocation=1L)
+path2 <- getURL("https://raw.githubusercontent.com/jjborrelli/Food-Chain-Length/master/Tables/NodeProperties.csv", ssl.verifypeer=0L, followlocation=1L)
 trophic.properties <- read.csv(text = path2, row.names = 1)
 
 consumers <- which(round(trophic.properties$TL, 6) >= 2)
@@ -588,7 +587,7 @@ tc.plot + scale_x_continuous(breaks = 2:6, name = "Trophic Position") + scale_y_
 qss.plot <- qplot(2:6, unlist(qss), xlab = "Number of Trophic Levels", ylab = "Quasi Sign-
                   Stability", margin = T)
 qss.plot <- qss.plot + geom_point(size = 4)
-qss.plot <- qss.plot + geom_line()
+qss.plot <- qss.plot + geom_line() + theme_bw()
 
 qss.plot <- qss.plot + theme(axis.title.x = element_text(size=22))
 qss.plot <- qss.plot + theme(axis.title.y = element_text(size=22))
