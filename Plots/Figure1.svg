@@ -15,7 +15,7 @@
    id="svg2"
    version="1.1"
    inkscape:version="0.48.4 r9939"
-   sodipodi:docname="New document 1">
+   sodipodi:docname="Figure1.svg">
   <defs
      id="defs4">
     <clipPath
@@ -581,12 +581,12 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.7"
-     inkscape:cx="589.89558"
+     inkscape:cx="145.43792"
      inkscape:cy="364.54551"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
-     inkscape:window-width="1366"
+     inkscape:window-width="844"
      inkscape:window-height="705"
      inkscape:window-x="-8"
      inkscape:window-y="-8"
@@ -599,7 +599,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -1421,7 +1421,8 @@
          sodipodi:role="line"
          id="tspan4752"
          x="-702.05286"
-         y="41.654572">DENSITY</tspan></text>
+         y="41.654572"
+         style="-inkscape-font-specification:Times New Roman;font-family:Times New Roman">DENSITY</tspan></text>
     <text
        xml:space="preserve"
        style="font-size:24px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
@@ -1432,7 +1433,8 @@
          sodipodi:role="line"
          id="tspan4756"
          x="376.28571"
-         y="1025.2195">NUMBER OF TROPHIC LEVELS</tspan></text>
+         y="1025.2195"
+         style="-inkscape-font-specification:Times New Roman;font-family:Times New Roman">NUMBER OF TROPHIC LEVELS</tspan></text>
     <flowRoot
        xml:space="preserve"
        id="flowRoot4758"
@@ -1443,7 +1445,7 @@
            height="158.57143"
            x="387.14285"
            y="516.9516" /></flowRegion><flowPara
-         id="flowPara4764"></flowPara></flowRoot>    <text
+         id="flowPara4764" /></flowRoot>    <text
        xml:space="preserve"
        style="font-size:24px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
        x="-786.6864"
@@ -1454,7 +1456,8 @@
          sodipodi:role="line"
          id="tspan4768"
          x="-786.6864"
-         y="547.43756">QUASI SIGN-STABILITY</tspan></text>
+         y="547.43756"
+         style="-inkscape-font-specification:Times New Roman;font-family:Times New Roman">QUASI SIGN-STABILITY</tspan></text>
     <text
        xml:space="preserve"
        style="font-size:24px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
