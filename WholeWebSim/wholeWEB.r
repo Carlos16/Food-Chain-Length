@@ -161,9 +161,14 @@ ggplot(totalDAT[totalDAT$ints == l,], aes(x = MeanTL, y = QSS)) +
   theme_bw() + xlab("Mean Trophic Postion") + ylab("Quasi Sign-Stability") +
   facet_wrap(~scenario)
 
+require(plyr)
 
+cors <- ddply(totalDAT, c("ints", "scenario"), function(x){cor <- cor.test(x$QSS, x$MeanTL); cbind(est = cor$estimate, p = cor$p.value, lower = cor$conf.int[1], upper = cor$conf.int[2])})
+
+alpha.corrected <- .05/29
+cors[cors$p < alpha.corrected & cors$est < 0,]
 
 getwd()
-save.image("chainINFO.Rdata")
+#save.image("chainINFO.Rdata")
 setwd("C:/Users/borre_000/Desktop/GitHub/Food-Chain-Length/WholeWebSim/")
 load("chainINFO.Rdata")
