@@ -351,7 +351,7 @@ plot(unlist(qss)~c(2,3,4,5,6),
      ylab="QSS")
 ```
   
-Sensitivity Analysis  
+Testing assumptions  
 --------------------------------------------------  
   
 ### Functions 
@@ -388,16 +388,24 @@ The `eig.analysis` function takes an imput of a list of matrices and randomly fi
 
 ```{r}
 eig.analysis <- function(n, matrices, params){
+  require(data.table)
   cols <- length(matrices)
   rows <- n
   eigenMATRIX <- matrix(nrow = rows, ncol = cols)
+  samps <- list()
   for(i in 1:n){
     ranmat <- lapply(matrices, ran.unif, pred = params[,1],
                      prey = params[,2], random = T)
+    sampvals <- matrix(nrow = length(ranmat), ncol = 100)
+    for(j in 1:length(ranmat)){
+      sampvals[j,] <- ranmat[[j]]
+    }
     eigs <- sapply(ranmat, maxRE)
     eigenMATRIX[i,] <- eigs
+    samps[[i]] <- as.data.frame(sampvals) 
   }
-  return(eigenMATRIX)
+  svals <- cbind(n = rep(1:n, each = cols), rbindlist(samps))
+  return(list(samples = svals, ematrix = eigenMATRIX))
 }
 ```
 
@@ -445,11 +453,12 @@ randomQSS <- function(numweb = 200, chain = 9, total = 14, params){
   
   mywebs1 <- lapply(mywebs, conversion)
   myweb.tl <- lapply(mywebs, TrophInd)
-  emat <- eig.analysis(1000, mywebs1, params, mode = "unif")
-  qss <- apply(emat, 2, function(x){sum(x<0)/1000})
+  emat <- eig.analysis(1000, mywebs1, params) 
+  
+  qss <- apply(emat$ematrix, 2, function(x){sum(x<0)/1000})
   mtl <- sapply(myweb.tl, max)
   
-  return(list(webs = mywebs, trophics = myweb.tl, eigs = emat, qss = qss, maxTL = mtl))
+  return(list(samp = emat$samples, trophics = myweb.tl, eigs = emat, qss = qss, maxTL = mtl))
 }
 
 ```
@@ -462,12 +471,14 @@ testLENGTH <- function(webiter = 200, maxchain = 9, totalINT = 14, params){
   qssLIST <- list()
   mtlLIST <- list()
   troLIST <- list()
+  matvals <- list()
   for(i in 1:maxchain){
-    cat(i, "\n")
+    #cat(i, "\n")
     test <- randomQSS(numweb = webiter, chain = i, total = totalINT, params = params)
     qssLIST[[i]] <- test$qss
     mtlLIST[[i]] <- test$maxTL
     troLIST[[i]] <- lapply(test$trophics, function(x){x$TL})
+    matvals[[i]] <- test$samp 
   }
   quas <- unlist(qssLIST)
   maxtl <- unlist(mtlLIST)
@@ -476,7 +487,7 @@ testLENGTH <- function(webiter = 200, maxchain = 9, totalINT = 14, params){
   
   data <- data.frame(QSS = quas, MaxTL = maxtl, MeanTL = meantl, MedTL = medtl)
   
-  return(data)
+  return(list(data = data, matrices = matvals))
 }
 
 ```
@@ -488,24 +499,24 @@ testLENGTH <- function(webiter = 200, maxchain = 9, totalINT = 14, params){
 
 pars <- data.frame(pred = c(10, 10, 10, 5, 5, 5, 1, 1, 1), prey = c(-1, -5, -10, -1, -5, -10, -1, -5, -10))
 ints <- c(12, 16, 20, 24, 28)
-
+allpars <- expand.grid(pars[,1], pars[,2], ints)
 ```
 
 
 ```{r totalSIM, eval = F}
 totalDATA <- list()
-for(i in 1:nrow(pars)){
-  chainDATA <- data.frame(QSS = c(), MaxTL = c(), MeanTL = c(), MedTL = c(), ints = factor())
-  for(j in 1:length(ints)){
-    chain <- testLENGTH(webiter = 100, maxchain = 9, totalINT = ints[j], params = pars[i,])
-    chain <- cbind(chain, ints = factor(rep(ints[j], 900)))
-    chainDATA <- rbind(chainDATA, chain)
-    cat("\n", ints[j], "is done", "\n")
-  }
-  totalDATA[[i]] <- chainDATA
-  cat("\n", i, "th par done", "\n")
+chainDATA <- data.frame(QSS = c(), MaxTL = c(), MeanTL = c(), MedTL = c(), ints = factor(), pars = factor())
+webDATA <- list()
+system.time(
+for(i in 1:405){
+  chain <- testLENGTH(webiter = 100, maxchain = 9, totalINT = allpars[i,3], params = allpars[i,1:2])
+  chain <- cbind(chain$data, ints = factor(rep(allpars[i, 3], 900)), pars = factor(rep(paste(allpars[i,1:2], collapse = "/"), 900)))
+  chainDATA <- rbind(chainDATA, chain)
+  webDATA[[i]] <- chain$matrices
+  cat("\n", i, "run done of", nrow(allpars), "\n")
   # each item of the list corresponds to the row of parameters
 }
+)
 
 totalDATA2 <- list()
 for(i in 1:9){
