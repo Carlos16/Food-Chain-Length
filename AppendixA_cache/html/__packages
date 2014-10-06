@@ -1,0 +1,15 @@
+base
+bitops
+datasets
+devtools
+ggplot2
+graphics
+grDevices
+grid
+igraph
+knitr
+methods
+RCurl
+reshape2
+stats
+utils

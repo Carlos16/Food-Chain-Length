@@ -1,6 +1,7 @@
 Appendix A
 ==================================================================================
 ```{r, echo = FALSE}
+library(knitr)
 opts_chunk$set(comment = NA, eval = T)
 ```
 
@@ -149,12 +150,13 @@ Code used in "Why are there so few trophic levels: selection against instability
 Loading required packages  
 
 ```{r packages, message = F}
-require(RCurl)
-require(igraph)
-require(reshape2)
-require(ggplot2)
-require(grid)
-require(devtools)
+library(RCurl)
+library(igraph)
+library(reshape2)
+library(ggplot2)
+library(grid)
+library(data.table)
+library(devtools)
 ```
 
 
@@ -315,7 +317,7 @@ analyze.eigen<-function(m){
   for(i in 1:nrow(m)){
     if(m[i,i]<0){m[i,i]<--1}
   }
-  ev<-max(Re(eigen(m)$values))
+  ev<-eigen(m)$values[1]
   return(ev)
 }
 ``` 
@@ -334,7 +336,7 @@ eigenvalues<-list()
 qss<-list()
 for(i in 1:5){
   eigenvalues[[i]]<-replicate(10000,analyze.eigen(sign.matrices[[i]]))
-  qss[[i]]<-sum(eigenvalues[[i]]<0)/10000
+  qss[[i]]<-sum(Re(eigenvalues[[i]])<0)/10000
 }
 
 names(eigenvalues)<-c("2 sp","3 sp","4 sp","5 sp","6 sp")
@@ -378,7 +380,7 @@ The `maxRE` computes the largest eigenvalue and returns the real part.
 
 ```{r}
 maxRE <- function(rmat){
-  lam.max <- max(Re(eigen(rmat)$values))
+  lam.max <- eigen(rmat)$values[which.max(Re(eigen(rmat)$values))]
   return(lam.max)
 }
 
@@ -389,23 +391,26 @@ The `eig.analysis` function takes an imput of a list of matrices and randomly fi
 ```{r}
 eig.analysis <- function(n, matrices, params){
   require(data.table)
+  dims <- dim(matrices[[1]])
   cols <- length(matrices)
   rows <- n
-  eigenMATRIX <- matrix(nrow = rows, ncol = cols)
+  eigenMATRIX.re <- matrix(nrow = rows, ncol = cols)
+  eigenMATRIX.im <- matrix(nrow = rows, ncol = cols)
   samps <- list()
   for(i in 1:n){
     ranmat <- lapply(matrices, ran.unif, pred = params[,1],
                      prey = params[,2], random = T)
-    sampvals <- matrix(nrow = length(ranmat), ncol = 100)
+    sampvals <- matrix(nrow = length(ranmat), ncol = dims[1]^2)
     for(j in 1:length(ranmat)){
       sampvals[j,] <- ranmat[[j]]
     }
     eigs <- sapply(ranmat, maxRE)
-    eigenMATRIX[i,] <- eigs
+    eigenMATRIX.re[i,] <- Re(eigs)
+    eigenMATRIX.im[i,] <- Im(eigs)
     samps[[i]] <- as.data.frame(sampvals) 
   }
-  svals <- cbind(n = rep(1:n, each = cols), rbindlist(samps))
-  return(list(samples = svals, ematrix = eigenMATRIX))
+  svals <- cbind(web = rep(1:length(matrices), n), n = rep(1:n, each = cols), rbindlist(samps))
+  return(list(samples = svals, ematrix.re = eigenMATRIX.re, ematrix.im = eigenMATRIX.im))
 }
 ```
 
@@ -425,14 +430,15 @@ conversion <- function(tm){
 The `randomQSS` function generates `numweb` random webs with `total` number of interactions. The `chain` argument determines the length of the initial chain the web is seeded with. Distributions for the relative impacts of predator and prey on eachother are determined by the values in the `params` argument. For each random web max, mean, and median trophic position are computed along with quasi sign-stability. Quasi sign-stability is calculated by randomly parameterizing each matrix 1000 times and determining the proportion that are stable. 
 
 ```{r}
-randomQSS <- function(numweb = 200, chain = 9, total = 14, params){
+randomQSS <- function(S = 10, numweb = 200, chain = 9, total = 14, params){
   require(NetIndices)
+  require(igraph)
   mywebs <- list()
   for(j in 1:numweb){
     
     check <- 1
     while(!check == 0){
-      myweb <- matrix(0, nrow = 10, ncol = 10)
+      myweb <- matrix(0, nrow = S, ncol = S)
       for(i in 1:chain){
         myweb[i,i+1] <- 1
       }
@@ -455,10 +461,17 @@ randomQSS <- function(numweb = 200, chain = 9, total = 14, params){
   myweb.tl <- lapply(mywebs, TrophInd)
   emat <- eig.analysis(1000, mywebs1, params) 
   
-  qss <- apply(emat$ematrix, 2, function(x){sum(x<0)/1000})
-  mtl <- sapply(myweb.tl, max)
+  qss <- apply(emat$ematrix.re, 2, function(x){sum(x<0)/1000})
+  maxtl <- sapply(myweb.tl, function(x){max(x$TL)})
+  meantl <- sapply(myweb.tl, function(x){mean(x$TL)})
+  medtl <- sapply(myweb.tl, function(x){median(x$TL)})
+  sdtl <- sapply(myweb.tl, function(x){sd(x$TL)})
+  diam <- sapply(lapply(mywebs, graph.adjacency), diameter)
   
-  return(list(samp = emat$samples, trophics = myweb.tl, eigs = emat, qss = qss, maxTL = mtl))
+  web.dat <- data.frame(qss, diam, maxtl, meantl, medtl, sdtl)
+  iter.dat <- cbind(par = rep(paste(params, collapse = "_"), nrow(emat$samples)), emat$samples, reals = as.vector(emat$ematrix.re), im = as.vector(emat$ematrix.im))
+  
+  return(list(web.dat, iter.dat))
 }
 
 ```
@@ -467,70 +480,97 @@ The `testLENGTH` function iterates through each possible seed chain length.
 
 ```{r}
 
-testLENGTH <- function(webiter = 200, maxchain = 9, totalINT = 14, params){
-  qssLIST <- list()
-  mtlLIST <- list()
-  troLIST <- list()
-  matvals <- list()
+testLENGTH <- function(webiter = 100, maxchain = 9, totalINT = 14, params){
+  web.dat.ls <- list()
+  iter.dat.ls <- list()
   for(i in 1:maxchain){
-    #cat(i, "\n")
-    test <- randomQSS(numweb = webiter, chain = i, total = totalINT, params = params)
-    qssLIST[[i]] <- test$qss
-    mtlLIST[[i]] <- test$maxTL
-    troLIST[[i]] <- lapply(test$trophics, function(x){x$TL})
-    matvals[[i]] <- test$samp 
+    cat(i, "\n")
+    test <- randomQSS(S = 10, numweb = webiter, chain = i, total = totalINT, params = params)
+    web.dat.ls[[i]] <- cbind(mxch = rep(i, nrow(test[[1]])), test[[1]])
+    iter.dat.ls[[i]] <- cbind(mxch = rep(i, nrow(test[[2]])), test[[2]])
   }
-  quas <- unlist(qssLIST)
-  maxtl <- unlist(mtlLIST)
-  meantl<- rapply(troLIST, mean)
-  medtl <- rapply(troLIST, median)
   
-  data <- data.frame(QSS = quas, MaxTL = maxtl, MeanTL = meantl, MedTL = medtl)
+  webdata <- rbindlist(web.dat.ls)
+  iterdata <- rbindlist(iter.dat.ls)
   
-  return(list(data = data, matrices = matvals))
+  return(list(webdata, iterdata))
 }
 
 ```
 
 ### Simulation
 
-
 ```{r}
-
 pars <- data.frame(pred = c(10, 10, 10, 5, 5, 5, 1, 1, 1), prey = c(-1, -5, -10, -1, -5, -10, -1, -5, -10))
 ints <- c(12, 16, 20, 24, 28)
-allpars <- expand.grid(pars[,1], pars[,2], ints)
+allpars <- unique(expand.grid(pars[,1], pars[,2], ints))
 ```
 
+
+```{r mkclust, eval = F}
+library(doSNOW)
+library(foreach)
+library(parallel)
+
+cl <- makeCluster(detectCores()-1)
+registerDoSNOW(cl)
+```
 
 ```{r totalSIM, eval = F}
-totalDATA <- list()
-chainDATA <- data.frame(QSS = c(), MaxTL = c(), MeanTL = c(), MedTL = c(), ints = factor(), pars = factor())
-webDATA <- list()
 system.time(
-for(i in 1:405){
-  chain <- testLENGTH(webiter = 100, maxchain = 9, totalINT = allpars[i,3], params = allpars[i,1:2])
-  chain <- cbind(chain$data, ints = factor(rep(allpars[i, 3], 900)), pars = factor(rep(paste(allpars[i,1:2], collapse = "/"), 900)))
-  chainDATA <- rbind(chainDATA, chain)
-  webDATA[[i]] <- chain$matrices
-  cat("\n", i, "run done of", nrow(allpars), "\n")
-  # each item of the list corresponds to the row of parameters
+RESULTS <- foreach(i = 1:45, .packages = c("data.table", "igraph", "NetIndices")) %dopar% {
+  
+  source("Food-Chain-Length/robustnessFUNC.R")
+  
+  chain <- testLENGTH(webiter = 10, maxchain = 9, totalINT = allpars[i,3],
+                      params = allpars[i,1:2])
+  
+  chls <- cbind(chain[[1]],
+                         ints = factor(rep(allpars[i, 3], nrow(chain[[1]]))),
+                         pars = factor(rep(paste(allpars[i,1:2], collapse = "/"),
+                                           nrow(chain[[1]]))))
+  
+  itls <- cbind(chain[[2]], 
+                        ints = factor(rep(allpars[i, 3], nrow(chain[[2]]))), 
+                        pars = factor(rep(paste(allpars[i,1:2], collapse = "/"),
+                                          nrow(chain[[2]]))))
+  
+  write.csv(itls, paste(getwd(), "/Food-Chain-Length/data/","data", i, "_",
+                        paste(allpars[i,], collapse = "_"), ".csv",
+                        sep = ""))
+  
+  return(chls)
+  
 }
 )
+chain.data <- rbindlist(RESULTS)
+write.csv(chain.data, paste(getwd(), "/Food-Chain-Length/chaindata.csv", sep = ""))
 
-totalDATA2 <- list()
-for(i in 1:9){
-  totalDATA2[[i]] <- cbind(totalDATA[[i]], scenario = paste(pars[i,], collapse = "/"))
-}
+stopCluster(cl)
 
-head(totalDATA2[[1]])
-
-totalDAT <- do.call(rbind, totalDATA2)
+ggplot(chain.data, aes(x = diam, y = qss, shape = ints)) + 
+  geom_point() + facet_wrap(~pars) + geom_smooth(method = "glm")
 
 ```
 
+```{r, eval = F}
+data.files <- list.files(paste(getwd(), "/Food-Chain-Length/data/", sep = ""))
+
+test.tab <- fread(paste(getwd(), "/Food-Chain-Length/data/",
+                        data.files[i], sep = ""), drop = 1)
+
+sub1 <- subset(test.tab, web == 1)
+sub2 <- subset(sub1, reals < 0, -c(mxch, par, web, n, reals, im, ints, pars))
+
+
+par(mfrow = c(10, 10), mar = c(1,1,1,1))
+apply(as.matrix(sub2), 2, hist, xlab = NA, ylab = NA, main = NA)
+```
+
+
 ```{r, echo = F}
-load("C:/Users/borre_000/Desktop/GitHub/Food-Chain-Length/WholeWebSim//chainINFO.Rdata")
+load("C:/Users/jjborrelli/Desktop/GitHub/Food-Chain-Length/WholeWebSim/chainINFO.Rdata")
+
 ```
   
 ### Figure S3
