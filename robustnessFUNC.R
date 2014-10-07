@@ -1,3 +1,11 @@
+# Load required libraries ------------------
+
+library(data.table)
+library(igraph)
+library(NetIndices)
+
+# Load functions ---------------------------
+
 ran.unif <- function(motmat, pred = 10, prey = -1, random = F){
   newmat <- apply(motmat, c(1,2), function(x){
     if(x==1){runif(1, 0, pred)}else if(x==-1){runif(1, prey, 0)} else{0}
@@ -47,7 +55,7 @@ conversion <- function(tm){
   return(tm)
 }
 
-randomQSS <- function(S = 10, numweb = 200, chain = 9, total = 14, params){
+randomWEBS <- function(S = 10, numweb = 200, chain = 9, total = 14){
   require(NetIndices)
   require(igraph)
   mywebs <- list()
@@ -73,6 +81,12 @@ randomQSS <- function(S = 10, numweb = 200, chain = 9, total = 14, params){
     }
     
   }
+  return(mywebs)
+}
+
+randomQSS <- function(mywebs, params){
+  require(NetIndices)
+  require(igraph)
   
   mywebs1 <- lapply(mywebs, conversion)
   myweb.tl <- lapply(mywebs, TrophInd)
@@ -86,29 +100,15 @@ randomQSS <- function(S = 10, numweb = 200, chain = 9, total = 14, params){
   diam <- sapply(lapply(mywebs, graph.adjacency), diameter)
   
   web.dat <- data.frame(qss, diam, maxtl, meantl, medtl, sdtl)
-  iter.dat <- cbind(par = rep(paste(params, collapse = "_"), nrow(emat$samples)), emat$samples, reals = as.vector(emat$ematrix.re), im = as.vector(emat$ematrix.im))
+  iter.dat <- cbind(par = rep(paste(params, collapse = "_"), nrow(emat$samples)),
+                    emat$samples, reals = as.vector(emat$ematrix.re),
+                    im = as.vector(emat$ematrix.im))
   
   return(list(web.dat, iter.dat))
 }
 
-testLENGTH <- function(webiter = 100, maxchain = 9, totalINT = 14, params){
-  web.dat.ls <- list()
-  iter.dat.ls <- list()
-  for(i in 1:maxchain){
-    cat(i, "\n")
-    test <- randomQSS(S = 10, numweb = webiter, chain = i, total = totalINT, params = params)
-    web.dat.ls[[i]] <- cbind(mxch = rep(i, nrow(test[[1]])), test[[1]])
-    iter.dat.ls[[i]] <- cbind(mxch = rep(i, nrow(test[[2]])), test[[2]])
-  }
-  
-  webdata <- rbindlist(web.dat.ls)
-  iterdata <- rbindlist(iter.dat.ls)
-  
-  return(list(webdata, iterdata))
-}
 
 
 ## PARAMS --------------------------------
 pars <- data.frame(pred = c(10, 10, 10, 5, 5, 5, 1, 1, 1), prey = c(-1, -5, -10, -1, -5, -10, -1, -5, -10))
-ints <- c(12, 16, 20, 24, 28)
-allpars <- unique(expand.grid(pars[,1], pars[,2], ints))
+

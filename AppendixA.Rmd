@@ -489,34 +489,57 @@ The `testLENGTH` function iterates through each possible seed chain length.
 ```{r}
 
 getQSS <- function(webiter = 100, maxchain = 9, totalINT = 14, params){
+  require(doSNOW)
+  require(parallel)
   
-  rwebs <- list()
-  for(i in 1:maxchain){
-    cat(i, "\n")
+  #make the cluster
+  cl <- makeCluster(detectCores()-1)
+  registerDoSNOW(cl)
+  
+  #webdata <- list()
+  #iterdata <- list()
+  #rwebs <- list()
+  RESULT <- foreach(i = 1:maxchain) %dopar% {
+    source("Food-Chain-Length/robustnessFUNC.R")
+    
+    #cat(i, "\n")
     rwebs <- randomWEBS(S = 10, numweb = webiter, chain = i, total = totalINT)
     web.dat.ls <- list()
     iter.dat.ls <- list()
     for(j in 1:nrow(params)){
       rqss <- randomQSS(mywebs = rwebs, params = params[j,1:2])
-      web.dat.ls[[j]] <- cbind(mxch = rep(i, nrow(rqss[[1]])), rqss[[1]])
-      iter.dat.ls[[j]] <- cbind(mxch = rep(i, nrow(rqss[[2]])), rqss[[2]])
-      cat("--", j, "\n")
+      web.dat.ls[[j]] <- cbind(C = rep(totalINT, nrow(rqss[[1]])),
+                               mxch = rep(i, nrow(rqss[[1]])), rqss[[1]])
+      iter.dat.ls[[j]] <- cbind(C = rep(totalINT, nrow(rqss[[2]])), 
+                                        mxch = rep(i, nrow(rqss[[2]])), rqss[[2]])
+      #cat("--", j, "\n")
     }
     
-    webdata[[i]] <- rbindlist(web.dat.ls)
-    iterdata[[i]] <- rbindlist(iter.dat.ls)
+    webdata <- rbindlist(web.dat.ls)
+    iterdata <- rbindlist(iter.dat.ls)
+    
+    return(list(webdata, iterdata))
   }
   
-  chain.data <- rbindlist(webdata)
-  iter.data <- rbindlist(iterdata)
-  #return(list(webdata, iterdata))
+  stopCluster(cl)
+  
+  rq1 <- list()
+  rw2 <- list()
+  for(i in 1:maxchain){
+    rq1[[i]] <- RESULT[[i]][[1]]
+    rw2[[i]] <- RESULT[[i]][[2]]
+  }
+  chain.data <- rbindlist(rq1)
+  iter.data <- rbindlist(rw2)
+  return(list(chain.data, iter.data))
+  
   
 }
 
 system.time(test <- getQSS(10, params = pars[1:2,]))
 
-
-
+# 10 webs per; 78 sec; 7 cores 
+# 100 webs per; 687 sec; 7 cores
 ```
 
 ### Simulation
@@ -524,53 +547,19 @@ system.time(test <- getQSS(10, params = pars[1:2,]))
 ```{r}
 pars <- data.frame(pred = c(10, 10, 10, 5, 5, 5, 1, 1, 1), prey = c(-1, -5, -10, -1, -5, -10, -1, -5, -10))
 ints <- c(12, 16, 20, 24, 28)
-allpars <- unique(expand.grid(pars[,1], pars[,2], ints))
 ```
 
-
-```{r mkclust, eval = F}
-library(doSNOW)
-library(foreach)
-library(parallel)
-
-cl <- makeCluster(detectCores()-1)
-registerDoSNOW(cl)
+```{r setwd}
+setwd("C:/Users/jjborrelli/Desktop/CHAINDATA/")
 ```
 
 ```{r totalSIM, eval = F}
-system.time(
-RESULTS <- foreach(i = 1:45, .packages = c("data.table", "igraph", "NetIndices")) %dopar% {
-  
-  source("Food-Chain-Length/robustnessFUNC.R")
-  
-  chain <- testLENGTH(webiter = 100, maxchain = 9, totalINT = allpars[i,3],
-                      params = allpars[i,1:2])
-  
-  chls <- cbind(chain[[1]],
-                         ints = factor(rep(allpars[i, 3], nrow(chain[[1]]))),
-                         pars = factor(rep(paste(allpars[i,1:2], collapse = "/"),
-                                           nrow(chain[[1]]))))
-  
-  itls <- cbind(chain[[2]], 
-                        ints = factor(rep(allpars[i, 3], nrow(chain[[2]]))), 
-                        pars = factor(rep(paste(allpars[i,1:2], collapse = "/"),
-                                          nrow(chain[[2]]))))
-  
-  write.csv(itls, paste("C:/Users/jjborrelli/Desktop/data/","data", i, "_",
-                        paste(allpars[i,], collapse = "_"), ".csv",
-                        sep = ""))
-  
-  return(chls)
-  
+
+for(i in 1:length(ints)){
+  temp <- getQSS(100, totalINT = ints[i], params = pars)
+  write.csv(temp[[1]], file = paste(getwd(), "webdata-", ints[i], sep = ""))
+  write.csv(temp[[2]], file = paste(getwd(), "iterdata-", ints[i], sep = ""))
 }
-)
-chain.data <- rbindlist(RESULTS)
-write.csv(chain.data, paste(getwd(), "/Food-Chain-Length/chaindata.csv", sep = ""))
-
-stopCluster(cl)
-
-ggplot(chain.data, aes(x = diam, y = qss, shape = ints)) + 
-  geom_point() + facet_wrap(~pars) + geom_smooth(method = "glm")
 
 ```
 
