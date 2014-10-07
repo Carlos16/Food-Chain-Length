@@ -430,7 +430,7 @@ conversion <- function(tm){
 The `randomQSS` function generates `numweb` random webs with `total` number of interactions. The `chain` argument determines the length of the initial chain the web is seeded with. Distributions for the relative impacts of predator and prey on eachother are determined by the values in the `params` argument. For each random web max, mean, and median trophic position are computed along with quasi sign-stability. Quasi sign-stability is calculated by randomly parameterizing each matrix 1000 times and determining the proportion that are stable. 
 
 ```{r}
-randomQSS <- function(S = 10, numweb = 200, chain = 9, total = 14, params){
+randomWEBS <- function(S = 10, numweb = 200, chain = 9, total = 14){
   require(NetIndices)
   require(igraph)
   mywebs <- list()
@@ -456,6 +456,12 @@ randomQSS <- function(S = 10, numweb = 200, chain = 9, total = 14, params){
     }
     
   }
+  return(mywebs)
+}
+
+randomQSS <- function(mywebs, params){
+  require(NetIndices)
+  require(igraph)
   
   mywebs1 <- lapply(mywebs, conversion)
   myweb.tl <- lapply(mywebs, TrophInd)
@@ -482,21 +488,34 @@ The `testLENGTH` function iterates through each possible seed chain length.
 
 ```{r}
 
-testLENGTH <- function(webiter = 100, maxchain = 9, totalINT = 14, params){
-  web.dat.ls <- list()
-  iter.dat.ls <- list()
+getQSS <- function(webiter = 100, maxchain = 9, totalINT = 14, params){
+  
+  rwebs <- list()
   for(i in 1:maxchain){
     cat(i, "\n")
-    test <- randomQSS(S = 10, numweb = webiter, chain = i, total = totalINT, params = params)
-    web.dat.ls[[i]] <- cbind(mxch = rep(i, nrow(test[[1]])), test[[1]])
-    iter.dat.ls[[i]] <- cbind(mxch = rep(i, nrow(test[[2]])), test[[2]])
+    rwebs <- randomWEBS(S = 10, numweb = webiter, chain = i, total = totalINT)
+    web.dat.ls <- list()
+    iter.dat.ls <- list()
+    for(j in 1:nrow(params)){
+      rqss <- randomQSS(mywebs = rwebs, params = params[j,1:2])
+      web.dat.ls[[j]] <- cbind(mxch = rep(i, nrow(rqss[[1]])), rqss[[1]])
+      iter.dat.ls[[j]] <- cbind(mxch = rep(i, nrow(rqss[[2]])), rqss[[2]])
+      cat("--", j, "\n")
+    }
+    
+    webdata[[i]] <- rbindlist(web.dat.ls)
+    iterdata[[i]] <- rbindlist(iter.dat.ls)
   }
   
-  webdata <- rbindlist(web.dat.ls)
-  iterdata <- rbindlist(iter.dat.ls)
+  chain.data <- rbindlist(webdata)
+  iter.data <- rbindlist(iterdata)
+  #return(list(webdata, iterdata))
   
-  return(list(webdata, iterdata))
 }
+
+system.time(test <- getQSS(10, params = pars[1:2,]))
+
+
 
 ```
 
