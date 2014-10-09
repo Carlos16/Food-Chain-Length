@@ -600,15 +600,15 @@ df3 <- data.frame(C = sub3$C, D = factor(sub3$diam +1), qss = sub3$qss, par = fa
 
 
 ggplot(aes(y = qss, x = D), data = df) + geom_boxplot() + 
-  facet_wrap(~par+C, scale = "fixed", ncol = 5) + theme_bw() +
+  facet_grid(par~C, scale = "fixed") + theme_bw() +
   xlab("Longest Chain Length") + ylab("Quasi Sign-Stability")
 
 ggplot(aes(y = qss, x = D), data = df2) + geom_boxplot() +
-  facet_wrap(~par+C, scale = "fixed", ncol = 5) + theme_bw() + 
+  facet_grid(par~C, scale = "fixed") + theme_bw() + 
   xlab("Longest Chain Length") + ylab("Quasi Sign-Stability")
 
 ggplot(aes(y = qss, x = D), data = df3) + geom_boxplot() + 
-  facet_wrap(~par+C, scale = "fixed", ncol = 5) + theme_bw() + 
+  facet_grid(par~C, scale = "fixed") + theme_bw() + 
   xlab("Longest Chain Length") + ylab("Quasi Sign-Stability")
 ```
 
