@@ -29,21 +29,21 @@ eig.analysis <- function(n, matrices, params){
   rows <- n
   eigenMATRIX.re <- matrix(nrow = rows, ncol = cols)
   eigenMATRIX.im <- matrix(nrow = rows, ncol = cols)
-  samps <- list()
+  #samps <- list()
   for(i in 1:n){
     ranmat <- lapply(matrices, ran.unif, pred = params[,1],
                      prey = params[,2], random = F)
-    sampvals <- matrix(nrow = length(ranmat), ncol = dims[1]^2)
-    for(j in 1:length(ranmat)){
-      sampvals[j,] <- ranmat[[j]]
-    }
+    #sampvals <- matrix(nrow = length(ranmat), ncol = dims[1]^2)
+    #for(j in 1:length(ranmat)){
+    #  sampvals[j,] <- ranmat[[j]]
+    #}
     eigs <- sapply(ranmat, maxRE)
     eigenMATRIX.re[i,] <- Re(eigs)
     eigenMATRIX.im[i,] <- Im(eigs)
-    samps[[i]] <- as.data.frame(sampvals) 
+    #samps[[i]] <- as.data.frame(sampvals) 
   }
   svals <- cbind(web = rep(1:length(matrices), n), n = rep(1:n, each = cols), rbindlist(samps))
-  return(list(samples = svals, ematrix.re = eigenMATRIX.re, ematrix.im = eigenMATRIX.im))
+  return(list(ematrix.re = eigenMATRIX.re, ematrix.im = eigenMATRIX.im))
 }
 
 conversion <- function(tm){
@@ -100,15 +100,9 @@ randomQSS <- function(mywebs, params){
   diam <- sapply(lapply(mywebs, graph.adjacency), diameter)
   
   web.dat <- data.frame(qss, diam, maxtl, meantl, medtl, sdtl)
-  iter.dat <- cbind(par = rep(paste(params, collapse = "_"), nrow(emat$samples)),
-                    emat$samples, reals = as.vector(emat$ematrix.re),
-                    im = as.vector(emat$ematrix.im))
+  #iter.dat <- cbind(par = rep(paste(params, collapse = "_"), nrow(emat$samples)),
+                    #emat$samples, reals = as.vector(emat$ematrix.re),
+                    #im = as.vector(emat$ematrix.im))
   
-  return(list(web.dat, iter.dat))
+  return(web.dat)
 }
-
-
-
-## PARAMS --------------------------------
-pars <- data.frame(pred = c(10, 10, 10, 5, 5, 5, 1, 1, 1), prey = c(-1, -5, -10, -1, -5, -10, -1, -5, -10))
-
