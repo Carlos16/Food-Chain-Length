@@ -12,7 +12,7 @@ ran.unif <- function(motmat, pred = 10, prey = -1, random = F){
   })
   if(random){
     diag(newmat) <- runif(length(diag(newmat)), -1, 0)
-  }else{diag(newmat) <- -1}
+  }else{diag(newmat) <- -.1}
   
   return(newmat)
 }
@@ -29,20 +29,17 @@ eig.analysis <- function(n, matrices, params){
   rows <- n
   eigenMATRIX.re <- matrix(nrow = rows, ncol = cols)
   eigenMATRIX.im <- matrix(nrow = rows, ncol = cols)
-  #samps <- list()
+  
   for(i in 1:n){
     ranmat <- lapply(matrices, ran.unif, pred = params[,1],
                      prey = params[,2], random = F)
-    #sampvals <- matrix(nrow = length(ranmat), ncol = dims[1]^2)
-    #for(j in 1:length(ranmat)){
-    #  sampvals[j,] <- ranmat[[j]]
-    #}
+    
     eigs <- sapply(ranmat, maxRE)
     eigenMATRIX.re[i,] <- Re(eigs)
     eigenMATRIX.im[i,] <- Im(eigs)
-    #samps[[i]] <- as.data.frame(sampvals) 
+    
   }
-  svals <- cbind(web = rep(1:length(matrices), n), n = rep(1:n, each = cols), rbindlist(samps))
+  
   return(list(ematrix.re = eigenMATRIX.re, ematrix.im = eigenMATRIX.im))
 }
 
@@ -100,9 +97,12 @@ randomQSS <- function(mywebs, params){
   diam <- sapply(lapply(mywebs, graph.adjacency), diameter)
   
   web.dat <- data.frame(qss, diam, maxtl, meantl, medtl, sdtl)
-  #iter.dat <- cbind(par = rep(paste(params, collapse = "_"), nrow(emat$samples)),
-                    #emat$samples, reals = as.vector(emat$ematrix.re),
-                    #im = as.vector(emat$ematrix.im))
+  
   
   return(web.dat)
 }
+
+
+webtest <- randomWEBS(S = 100, numweb = 25, chain = 10, total = 1000)
+
+qsstest <- randomQSS(webtest, matrix(c(1, -.01, 1, -.1), nrow = 2, byrow = T))

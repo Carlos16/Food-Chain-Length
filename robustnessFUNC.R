@@ -107,6 +107,38 @@ randomQSS <- function(mywebs, params){
   return(list(web.dat, iter.dat))
 }
 
+niche.model<-function(S,C){
+  new.mat<-matrix(0,nrow=S,ncol=S)
+  ci<-vector()
+  niche<-runif(S,0,1)
+  r<-rbeta(S,1,((1/(2*C))-1))*niche
+  
+  for(i in 1:S){
+    ci[i]<-runif(1,r[i]/2,niche[i])
+  }
+  
+  r[which(niche==min(niche))]<-.00000001
+  
+  for(i in 1:S){
+    
+    for(j in 1:S){
+      if(niche[j]>(ci[i]-(.5*r[i])) && niche[j]<(ci[i]+.5*r[i])){
+        new.mat[j,i]<-1
+      }
+    }
+  }
+  
+  new.mat<-new.mat[,order(apply(new.mat,2,sum))]
+  return(new.mat)
+}
+
+niche_maker <- function(n, S, C){
+  niche.list <- list()
+  for (i in 1:n){
+    niche.list[[i]]<- niche.model(S, C)
+  }
+  return(niche.list)
+}
 
 
 ## PARAMS --------------------------------

@@ -498,10 +498,11 @@ getQSS <- function(webiter = 100, maxchain = 9, totalINT = 14, params, filepath)
   registerDoSNOW(cl)
  
   RESULT <- foreach(i = 1:maxchain) %dopar% {
-    source("C:/Users/jjborrelli/Desktop/GitHub/Food-Chain-Length/robustnessFUNC_largeS.R")
+    source("C:/Users/jjborrelli/Desktop/GitHub/Food-Chain-Length/robustnessFUNC.R")
     
     #cat(i, "\n")
-    rwebs <- randomWEBS(S = 100, numweb = webiter, chain = i, total = totalINT)
+    #rwebs <- randomWEBS(S = 10, numweb = webiter, chain = i, total = totalINT)
+    rwebs <- niche_maker(15, 10, totalINT)
     rqss <- list()
     for(j in 1:nrow(params)){
       rqss[[j]] <- randomQSS(mywebs = rwebs, params = params[j,1:2])
@@ -522,7 +523,7 @@ getQSS <- function(webiter = 100, maxchain = 9, totalINT = 14, params, filepath)
     rqss <- unlist(rqss, recursive = F)
     web.dat.ls <- rbindlist(rqss[seq(1, length(rqss), 2)])
     iter.dat.ls <- rbindlist(rqss[seq(2, length(rqss), 2)])
-    web.data.ls <-rbindlist(rqss)
+    
     return(list(web.dat.ls, iter.dat.ls))
     
   }
@@ -537,10 +538,10 @@ getQSS <- function(webiter = 100, maxchain = 9, totalINT = 14, params, filepath)
   write.csv(chain.data, file = paste(filepath, "/webdata-", 
                                      totalINT, ".csv", sep = ""),
             row.names = F)
-  write.csv(iter.data, file = paste(filepath, "/iterdata-", 
-                                    totalINT, ".csv", sep = ""),
-            row.names = F)
-  return(rbindlist(RESULT))
+  #write.csv(iter.data, file = paste(filepath, "/iterdata-", 
+  #                                  totalINT, ".csv", sep = ""),
+  #          row.names = F)
+  return(chain.data)
 }
 
 ```
@@ -559,8 +560,8 @@ setwd("C:/Users/jjborrelli/Desktop/CHAINDATA/")
 ```{r totalSIM, eval = F}
 system.time(
 for(con in 1:length(ints)){
-  getQSS(25, totalINT = ints[con], params = pars, 
-         filepath = "C:/Users/jjborrelli/Desktop/CHAINDATA2/")
+  getQSS(10, maxchain =7, totalINT = ints[con]/100, params = pars, 
+         filepath = "C:/Users/jjborrelli/Desktop/CHAINDATA_ni/")
   cat(con/length(ints)*100, "%", "\n")
 }
 )
@@ -585,14 +586,54 @@ sub1 <- subset(webdata, par == "1/-10" | par == "10/-1" | par == "1/-5" | par ==
 sub2 <- subset(webdata, par == "5/-10" | par == "10/-5")
 sub3 <- subset(webdata, par == "1/-1" | par == "10/-10" | par == "5/-5")
 
-#ggplot(sub1, aes(x = factor(diam+1), y = qss, shape = C)) + 
-#  geom_point(alpha = .25, position = position_jitter(w=0.2), col = "grey58") + 
-#  stat_summary(fun.y="mean", geom="point", aes(shape = C)) +
-#  stat_summary(fun.ymin = sem.l, fun.y = "mean", fun.ymax = sem.u,
-#               geom="errorbar", width = .2) + 
-#  #geom_smooth(method = "glm", aes(lty = C)) +
-#  facet_wrap(~par) + theme_bw() +
-#  xlab("Longest Food Chain Length") + ylab("Quasi sign-stability")
+ggplot(sub1, aes(x = factor(diam+1), y = qss)) + 
+  geom_point(alpha = .25, position = position_jitter(w=0.2), col = "grey58") + 
+  stat_summary(fun.y="mean", geom="point") +
+  stat_summary(fun.ymin = sem.l, fun.y = "mean", fun.ymax = sem.u,
+               geom="errorbar", width = .2) + 
+  #geom_smooth(method = "glm", aes(lty = C)) +
+  facet_grid(par~C) + theme_bw() +
+  xlab("Longest Food Chain Length") + ylab("Quasi sign-stability")
+
+ggsave("C:/Users/jjborrelli/Desktop/CHAINDATA/rand1.jpeg", dpi = 1000, width = 8, height = 10)
+dev.off()
+
+ggplot(sub2, aes(x = factor(diam+1), y = qss)) + 
+  geom_point(alpha = .25, position = position_jitter(w=0.2), col = "grey58") + 
+  stat_summary(fun.y="mean", geom="point") +
+  stat_summary(fun.ymin = sem.l, fun.y = "mean", fun.ymax = sem.u,
+               geom="errorbar", width = .2) + 
+  #geom_smooth(method = "glm", aes(lty = C)) +
+  facet_grid(par~C) + theme_bw() +
+  xlab("Longest Food Chain Length") + ylab("Quasi sign-stability")
+
+ggsave("C:/Users/jjborrelli/Desktop/CHAINDATA/rand2.jpeg", dpi = 1000, width = 8, height = 10)
+dev.off()
+
+ggplot(sub3, aes(x = factor(diam+1), y = qss)) + 
+  geom_point(alpha = .25, position = position_jitter(w=0.2), col = "grey58") + 
+  stat_summary(fun.y="mean", geom="point") +
+  stat_summary(fun.ymin = sem.l, fun.y = "mean", fun.ymax = sem.u,
+               geom="errorbar", width = .2) + 
+  #geom_smooth(method = "glm", aes(lty = C)) +
+  facet_grid(par~C) + theme_bw() +
+  xlab("Longest Food Chain Length") + ylab("Quasi sign-stability")
+
+ggsave("C:/Users/jjborrelli/Desktop/CHAINDATA/rand3.jpeg", dpi = 1000, width = 8, height = 10)
+dev.off()
+
+ggplot(webdata, aes(x = factor(diam+1), y = qss)) + 
+  geom_point(alpha = .25, position = position_jitter(w=0.2), col = "grey58") + 
+  stat_summary(fun.y="mean", geom="point") +
+  stat_summary(fun.ymin = sem.l, fun.y = "mean", fun.ymax = sem.u,
+               geom="errorbar", width = .2) + 
+  #geom_smooth(method = "glm", aes(lty = C)) +
+  facet_grid(par~C) + theme_bw() +
+  xlab("Longest Food Chain Length") + ylab("Quasi sign-stability")
+
+ggsave("C:/Users/jjborrelli/Desktop/CHAINDATA/rand-all.jpeg", dpi = 1000, width = 8, height = 10)
+dev.off()
+
 
 df <- data.frame(C = sub1$C, D = factor(sub1$diam +1), qss = sub1$qss, par = factor(sub1$par))
 df2 <- data.frame(C = sub2$C, D = factor(sub2$diam +1), qss = sub2$qss, par = factor(sub2$par))
@@ -617,8 +658,10 @@ ggplot(aes(y = qss, x = D), data = df3) + geom_boxplot() +
 data.files <- list.files(path = "C:/Users/jjborrelli/Desktop/CHAINDATA/", pattern = "iter")
 
 test.tab <- fread(paste("C:/Users/jjborrelli/Desktop/CHAINDATA/",
-                        data.files[i], sep = ""))
+                        data.files[i], sep = ""), 
+                  select = c("C", "reals", "im", "par"))
 
+ggplot(test.tab, aes(x = reals, y = im)) + geom_point() + facet_grid(~par)
 
 sub1 <- subset(test.tab, reals < 0, -c(C, mxch, par, web, n, reals, im, par))
 samprow <- sub1[sample(1:nrow(sub1), 1000, replace = F)]
