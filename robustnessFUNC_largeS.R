@@ -12,7 +12,7 @@ ran.unif <- function(motmat, pred = 10, prey = -1, random = F){
   })
   if(random){
     diag(newmat) <- runif(length(diag(newmat)), -1, 0)
-  }else{diag(newmat) <- -.1}
+  }else{diag(newmat) <- -1}
   
   return(newmat)
 }
@@ -102,7 +102,58 @@ randomQSS <- function(mywebs, params){
   return(web.dat)
 }
 
+niche.model<-function(S,C){
+  require(igraph)
+  connected = FALSE
+  while(!connected){  
+    new.mat<-matrix(0,nrow=S,ncol=S)
+    ci<-vector()
+    niche<-runif(S,0,1)
+    r<-rbeta(S,1,((1/(2*C))-1))*niche
+    
+    for(i in 1:S){
+      ci[i]<-runif(1,r[i]/2,niche[i])
+    }
+    
+    r[which(niche==min(niche))]<-.00000001
+    
+    for(i in 1:S){
+      
+      for(j in 1:S){
+        if(niche[j]>(ci[i]-(.5*r[i])) && niche[j]<(ci[i]+.5*r[i])){
+          new.mat[j,i]<-1
+        }
+      }
+    }
+    
+    new.mat<-new.mat[,order(apply(new.mat,2,sum))]
+    
+    connected <- is.connected(graph.adjacency(new.mat))
+  }
+  return(new.mat)
+}
+
+
+niche_maker <- function(n, S, C){
+  niche.list <- list()
+  for (i in 1:n){
+    niche.list[[i]]<- niche.model(S, C)
+  }
+  return(niche.list)
+}
 
 webtest <- randomWEBS(S = 100, numweb = 25, chain = 10, total = 1000)
 
 qsstest <- randomQSS(webtest, matrix(c(1, -.01, 1, -.1), nrow = 2, byrow = T))
+
+nichetest <- niche_maker(50, 100, .05)
+nichetest2 <- niche_maker(50, 100, .1)
+nichetest3 <- niche_maker(50, 50, .1)
+
+nicheqss <- randomQSS(nichetest, matrix(c(1, -1), nrow = 1))
+nicheqss2 <- randomQSS(nichetest2, matrix(c(1, -1), nrow = 1))
+nicheqss3 <- randomQSS(nichetest3, matrix(c(1, -1), nrow = 1))
+
+nicheqss.1 <- randomQSS(nichetest, matrix(c(3, -1), nrow = 1))
+nicheqss2.1 <- randomQSS(nichetest2, matrix(c(3, -1), nrow = 1))
+nicheqss3.1 <- randomQSS(nichetest3, matrix(c(3, -1), nrow = 1))

@@ -169,13 +169,13 @@ path <- getURL("https://raw.githubusercontent.com/jjborrelli/Food-Chain-Length/m
 web.diameters <- read.csv(text = path, row.names = 1)
 
 diam.plot <- ggplot(web.diameters, aes(x = Diameter + 1, y = ..density..))
-diam.plot <- diam.plot + geom_histogram(breaks = seq(2.5, 9.5, 1))
+diam.plot <- diam.plot + geom_histogram(binwidth = 1)
 diam.plot <- diam.plot + theme(axis.title.x = element_text(size = 20))
 diam.plot <- diam.plot + theme(axis.title.y = element_text(size = 20))
 diam.plot <- diam.plot + theme(axis.text.x = element_text(size = 15))
 diam.plot <- diam.plot + theme(axis.text.y = element_text(size = 15))
-diam.plot <- diam.plot + scale_y_continuous(name = "Density")
-diam.plot <- diam.plot + scale_x_continuous(name = "Longest Chain Length", breaks = 0:9)
+diam.plot <- diam.plot + scale_y_continuous(name = "Density", limits = c(0,.55))
+diam.plot <- diam.plot + scale_x_continuous(name = "Longest Chain Length", breaks = 0:9) + theme_bw()
 ```
 
 
@@ -262,25 +262,30 @@ Setting the plotting options to highlight the longest chain in each web:
 ```{r plotSETTINGS}
 for(i in 1:5){
   E(graph.chains[[i]])$color = "darkslategray4"
-  E(graph.chains[[i]], path = c(1:(i+1)))$color = "darkslategrey"
+  E(graph.chains[[i]], path = c(1:(i+1)))$color = "black"
 }
 ```
 
 Create the plot
 ```{r chainPlot, eval = F}
-par(mfrow=c(5, 1),mar=c(.5, .5, .5, .5))
+tiff("simpleWEBS.tiff", width = 200, height = 500, res = 100)
+
+par(mfrow=c(5, 1),mar=c(.1, .1, .1, .1))
 for(i in 1:5){
   plot.igraph(graph.chains[[i]], layout = layouts[[i]],
               vertex.size = 40,
-              vertex.color = "black",
-              vertex.label.color = "white",
-              vertex.label.cex = 1.5,
-              edge.width = 3,
-              edge.arrow.size = .75,
-              frame = T)
-  text(2, 1, label = text[i], cex = 1.5)
+              vertex.color = "white",
+              vertex.label.color = "black",
+              vertex.label.cex = 1,
+              edge.width = 1,
+              edge.arrow.size = .35,
+              frame = T,
+              margin = 0)
+  #text(2, 1, label = text[i], cex = 1.5)
 }
 
+
+dev.off()
 ```
 
 **Figure A2:** Plot of each of the 5 food webs analyzed in the paper. The longest chain is highlighed in each case 
@@ -488,7 +493,7 @@ The `testLENGTH` function iterates through each possible seed chain length.
 
 ```{r}
 
-getQSS <- function(webiter = 100, maxchain = 9, totalINT = 14, params, filepath){
+getQSS <- function(webiter = 100, maxchain = 9, totalINT = 14, params, filepath, niche = FALSE){
   require(doSNOW)
   require(parallel)
   require(data.table)
@@ -501,8 +506,12 @@ getQSS <- function(webiter = 100, maxchain = 9, totalINT = 14, params, filepath)
     source("C:/Users/jjborrelli/Desktop/GitHub/Food-Chain-Length/robustnessFUNC.R")
     
     #cat(i, "\n")
-    #rwebs <- randomWEBS(S = 10, numweb = webiter, chain = i, total = totalINT)
-    rwebs <- niche_maker(15, 10, totalINT)
+    if(!niche){
+      rwebs <- randomWEBS(S = 10, numweb = webiter, chain = i, total = totalINT)
+    }else{
+      rwebs <- niche_maker(15, 10, totalINT)
+    }
+  
     rqss <- list()
     for(j in 1:nrow(params)){
       rqss[[j]] <- randomQSS(mywebs = rwebs, params = params[j,1:2])
@@ -561,7 +570,7 @@ setwd("C:/Users/jjborrelli/Desktop/CHAINDATA/")
 system.time(
 for(con in 1:length(ints)){
   getQSS(10, maxchain =7, totalINT = ints[con]/100, params = pars, 
-         filepath = "C:/Users/jjborrelli/Desktop/CHAINDATA_ni/")
+         filepath = "C:/Users/jjborrelli/Desktop/CHAINDATA_ni2/", niche = T)
   cat(con/length(ints)*100, "%", "\n")
 }
 )
@@ -690,13 +699,9 @@ consumers <- which(round(trophic.properties$TL, 6) >= 2)
 
 # ggplot of distribution of trophic positions equal or higher than 2
 tc.plot <- ggplot(trophic.properties[consumers,], aes(x = TL, y = ..density..)) + theme_bw()
-
-tc.plot <- tc.plot + geom_histogram(binwidth = .8) + xlab("Trophic Position") + ylab("Density")
-tc.plot <- tc.plot + theme(axis.title.x = element_text(size = 25))
-tc.plot <- tc.plot + theme(axis.title.y = element_text(size = 25))
-tc.plot <- tc.plot + theme(axis.text.x = element_text(size = 18))
-tc.plot <- tc.plot + theme(axis.text.y = element_text(size = 18))
-tc.plot + scale_x_continuous(breaks = 2:6, name = "Trophic Position") + scale_y_continuous(name = "Density")
+tc.plot <- tc.plot + geom_histogram(binwidth = 1) + xlab("Trophic Position") + ylab("Density")
+tc.plot <- tc.plot + scale_x_continuous(limits = c(2,6),name = "Trophic Position") + scale_y_continuous(name = "Density", limits = c(0,.55))
+tc.plot
 ```
 
 #### Figure 1b  
