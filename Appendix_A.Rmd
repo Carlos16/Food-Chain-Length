@@ -1,149 +1,181 @@
 ---
 title: "Appendix A"
 output:
+  pdf_document:
+    toc: yes
   html_document:
     number_sections: yes
-    toc: yes
     theme: readable
+    toc: yes
+  word_document: default
 ---
 
 # Data  
 
 ## Data Sources
-Three food webs were downloaded from the [Dryad Digital Repository](http://datadryad.org/resource/doi:10.5061/dryad.c213h) (Roopnarine & Hertog 2012a, 2012b). Another seven were available from [Ecological Archives](http://esapubs.org/Archive/search.php) (Hechinger et al. 2011; Mouritsen et al. 2011; Thieltges et al. 2011; Zander et al. 2011; Preston et al. 2012). Fourteen webs were provided by Jennifer Dunne of the [PEaCE Lab](http://peacelab.net/) (Baird & Ulanowicz 1989; Warren 1989; Polis 1991; Hall & Raffaelli 1991; Martinez 1991; Christensen & Pauly 1992; Havens 1992; Goldwasser & Roughgarden 1993; Opitz 1996; Waide & Reagan 1996; Yodzis 1998, 2000; Christian & Luczkovich 1999; Martinez et al. 1999; Memmott et al. 2000; Link 2002) that were analyzed in (Dunne et al. 2002, 2004). The remaining 26 food webs were downloaded from the [Interaction Web Database](http://www.nceas.ucsb.edu/interactionweb/html/thomps_towns.html) (Jaarsma et al. 1998; Townsend et al. 1998; Thompson & Townsend 1999, 2000, 2003, 2005; Thompson & Edwards 2001).   
+Three food webs were downloaded from the [Dryad Digital Repository](http://datadryad.org/resource/doi:10.5061/dryad.c213h) (Roopnarine & Hertog 2012a, 2012b). Another seven were available from [Ecological Archives](http://esapubs.org/Archive/search.php) (Hechinger et al. 2011; Mouritsen et al. 2011; Thieltges et al. 2011; Zander et al. 2011; Preston et al. 2012). Fourteen webs were provided by Jennifer Dunne of the [PEaCE Lab](http://peacelab.net/) (Baird & Ulanowicz 1989; Warren 1989; Polis 1991; Hall & Raffaelli 1991; Martinez 1991; Christensen & Pauly 1992; Havens 1992; Goldwasser & Roughgarden 1993; Opitz 1996; Waide & Reagan 1996; Yodzis 1998, 2000; Christian & Luczkovich 1999; Martinez et al. 1999; Memmott et al. 2000; Link 2002) that were analyzed in (Dunne et al. 2002, 2004). The remaining 26 food webs were downloaded from the [Interaction Web Database](http://www.nceas.ucsb.edu/interactionweb/html/thomps_towns.html) (Jaarsma et al. 1998; Townsend et al. 1998; Thompson & Townsend 1999, 2000, 2003, 2005; Thompson & Edwards 2001). We also used a subset of sixteen ecosystem networks provided by [Robert Ulanowicz through his website](http://www.cbl.umces.edu/~ulan), and used most recently in Ulanowicz et al. 2014.     
 
 ## References
   
-1.
-  
-Baird, D. and Ulanowicz, R. (1989). The seasonal dynamics of the Chesapeake Bay ecosystem. Ecol. Monogr., 59, 329–364.
-      
-2.
-  
-Christensen, V. and Pauly, D. (1992). ECOPATH II—a software for balancing steady-state ecosystem models and calculating network characteristics. Ecol. Modell., 61, 169–185.
-      
-3.
-  
-Christian, R.R. and Luczkovich, J.J. (1999). Organizing and understanding a winter’s seagrass foodweb network through effective trophic levels. Ecol. Modell., 117, 99–124.
-      
-4.
-  
-Dunne, J., Williams, R. and Martinez, N. (2004). Network structure and robustness of marine food webs. Mar. Ecol. Prog. Ser., 273, 291–302.
-      
-5.
-  
-Dunne, J.A., Williams, R.J. and Martinez, N.D. (2002). Network structure and biodiversity loss in food webs: robustness increases with connectance. Ecol. Lett., 5, 558–567.
-      
-6.
-  
-Goldwasser, L. and Roughgarden, J. (1993). Construction and analysis of a large Carribean food web. Ecology, 74, 1216–1233.
-      
-7.
-  
-Hall, S. and Raffaelli, D. (1991). Food-web patterns: lessons from a species-rich web. J. Anim. Ecol., 60, 823–841.
-      
-8.
-  
-Havens, K. (1992). Scale and structure in natural food webs. Science., 257, 1107–1109.
-      
-9.
-  
-Hechinger, R.F., Lafferty, K.D., McLaughlin, J.P., Fredensborg, B.L., Huspeni, T.C., Lorda, J., et al. (2011). Food webs including parasites, biomass, body sizes, and life stages for three California/Baja California estuaries. Ecology, 92, 791.
-      
-10.
-  
-Jaarsma, N.G., de Boer, S.M., Townsend, C.R., Thompson, R.M. and Edwards, E.D. (1998). Characterising food‐webs in two New Zealand streams. New Zeal. J. Mar. Freshw. Res., 32, 271–286.
-      
-11.
-  
-Link, J. (2002). Does food web theory work for marine ecosystems? Mar. Ecol. Prog. Ser., 230, 1–9.
-      
-12.
-  
-Martinez, N. (1991). Artifacts or Attributes? Effects of Resolution on the Little Rock Lake Food Web. Ecol. Monogr., 61, 367–392.
-    
-13.
-  
-Martinez, N., Hawkins, B., Dawah, H. and Feifarek, B. (1999). Effects of sampling effort on characterization of food-web structure. Ecology, 80, 1044–1055.
-      
-14.
-  
-Memmott, J., Martinez, N.D. and Cohen, J.E. (2000). Predators, parasitoids and pathogens: species richness, trophic generality and body sizes in a natural food web. J. Anim. Ecol., 69, 1–15.
-        
-15.
-  
-Mouritsen, K.N., Poulin, R., McLaughlin, J.P. and Thieltges, D.W. (2011). Food web including metazoan parasites for an intertidal ecosystem in New Zealand. Ecology, 92, 2006–2006.
-      
-16.
-  
-Opitz, S. (1996). Trophic interactions in Caribbean coral reefs. ICALRM Tech, Makati City, Philippines.
-      
-17.
-  
-Polis, G. (1991). Complex trophic interactions in deserts: an empirical critique of food-web theory. Am. Nat., 138, 123–155.  
-      
-19.
-  
-Preston, D.L., Orlofske, S.A., McLaughlin, J.P. and Johnson, P.T. (2012). Food web including infectious agents for a California freshwater pond. Ecology, 93, 1760.
-      
-20.
-  
-Roopnarine, P.D. and Hertog, R. (2012a). Data from: Detailed food web networks of three Greater Antillean coral reef systems: the Cayman Islands, Cuba, and Jamaica. Dryad Digital Repository. doi: 10.5061/dryad.c213h
-      
-21.
-  
-Roopnarine, P.D. and Hertog, R. (2012b). Detailed food web networks of three Greater Antillean coral reef systems: the Cayman Islands, Cuba, and Jamaica. Dataset Pap. Ecol., 2013, 857470. doi:10.7167/2013/857470
-      
-22.
-  
-Thieltges, D.W., Reise, K., Mouritsen, K.N., McLaughlin, J.P. and Poulin, R. (2011). Food web including metazoan parasites for a tidal basin in Germany and Denmark. Ecology, 92, 2005.
-      
-23.
-  
-Thompson, R. and Edwards, E. (2001). Allocation of effort in stream food-web studies: the best compromise? Mar. Freshw. Res., 52, 339–345.
-      
-24.
-  
-Thompson, R. and Townsend, C. (1999). The effect of seasonal variation on the community structure and food-web attributes of two streams: implications for food-web science. Oikos, 87, 75–88.
-      
-25.
-  
+Baird, D. and Ulanowicz, R. (1989). The seasonal dynamics of the Chesapeake Bay ecosystem. Ecol. Monogr., 59, 329:364.  
+
+Christensen, V. and Pauly, D. (1992). ECOPATH II: ��a software for balancing steady:state ecosystem models and calculating network characteristics. Ecol. Modell., 61, 169:185.  
+
+Christian, R.R. and Luczkovich, J.J. (1999). Organizing and understanding a winter:��s seagrass foodweb network through effective trophic levels. Ecol. Modell., 117, 99:124.  
+
+Dunne, J., Williams, R. and Martinez, N. (2004). Network structure and robustness of marine food webs. Mar. Ecol. Prog. Ser., 273, 291:302.  
+
+Dunne, J.A., Williams, R.J. and Martinez, N.D. (2002). Network structure and biodiversity loss in food webs: robustness increases with connectance. Ecol. Lett., 5, 558:567.  
+
+Goldwasser, L. and Roughgarden, J. (1993). Construction and analysis of a large Carribean food web. Ecology, 74, 1216:1233.  
+
+Hall, S. and Raffaelli, D. (1991). Food:web patterns: lessons from a species:rich web. J. Anim. Ecol., 60, 823:841.  
+
+Havens, K. (1992). Scale and structure in natural food webs. Science., 257, 1107:1109.  
+
+Hechinger, R.F., Lafferty, K.D., McLaughlin, J.P., Fredensborg, B.L., Huspeni, T.C., Lorda, J., et al. (2011). Food webs including parasites, biomass, body sizes, and life stages for three California/Baja California estuaries. Ecology, 92, 791.  
+
+Jaarsma, N.G., de Boer, S.M., Townsend, C.R., Thompson, R.M. and Edwards, E.D. (1998). Characterising food:��webs in two New Zealand streams. New Zeal. J. Mar. Freshw. Res., 32, 271:286.  
+
+Link, J. (2002). Does food web theory work for marine ecosystems? Mar. Ecol. Prog. Ser., 230, 1:9.  
+
+Martinez, N. (1991). Artifacts or Attributes? Effects of Resolution on the Little Rock Lake Food Web. Ecol. Monogr., 61, 367:392.  
+
+Martinez, N., Hawkins, B., Dawah, H. and Feifarek, B. (1999). Effects of sampling effort on characterization of food:web structure. Ecology, 80, 1044:1055.  
+
+Memmott, J., Martinez, N.D. and Cohen, J.E. (2000). Predators, parasitoids and pathogens: species richness, trophic generality and body sizes in a natural food web. J. Anim. Ecol., 69, 1:15.  
+
+Mouritsen, K.N., Poulin, R., McLaughlin, J.P. and Thieltges, D.W. (2011). Food web including metazoan parasites for an intertidal ecosystem in New Zealand. Ecology, 92, 2006.  
+
+Opitz, S. (1996). Trophic interactions in Caribbean coral reefs. ICALRM Tech, Makati City, Philippines.  
+
+Polis, G. (1991). Complex trophic interactions in deserts: an empirical critique of food:web theory. Am. Nat., 138, 123:155.  
+
+Preston, D.L., Orlofske, S.A., McLaughlin, J.P. and Johnson, P.T. (2012). Food web including infectious agents for a California freshwater pond. Ecology, 93, 1760.  
+
+Roopnarine, P.D. and Hertog, R. (2012a). Data from: Detailed food web networks of three Greater Antillean coral reef systems: the Cayman Islands, Cuba, and Jamaica. Dryad Digital Repository. doi: 10.5061/dryad.c213h  
+
+Roopnarine, P.D. and Hertog, R. (2012b). Detailed food web networks of three Greater Antillean coral reef systems: the Cayman Islands, Cuba, and Jamaica. Dataset Pap. Ecol., 2013, 857470. doi:10.7167/2013/857470  
+
+Thieltges, D.W., Reise, K., Mouritsen, K.N., McLaughlin, J.P. and Poulin, R. (2011). Food web including metazoan parasites for a tidal basin in Germany and Denmark. Ecology, 92, 2005.  
+
+Thompson, R. and Edwards, E. (2001). Allocation of effort in stream food:web studies: the best compromise? Mar. Freshw. Res., 52, 339:345.  
+
+Thompson, R. and Townsend, C. (1999). The effect of seasonal variation on the community structure and food:web attributes of two streams: implications for food:web science. Oikos, 87, 75:88.  
+
 Thompson, R. and Townsend, C. (2003). Impacts on stream food webs of native and exotic forest: an intercontinental 
-comparison. Ecology, 84, 145–161.
-      
-26.
+comparison. Ecology, 84, 145:161.  
+
+Thompson, R. and Townsend, C. (2005). Energy availability, spatial heterogeneity and ecosystem size predict food:web structure in streams. Oikos, 108, 137:148.  
+
+Thompson, R.M. and Townsend, C.R. (2000). Is resolution the solution?: the effect of taxonomic resolution on the calculated properties of three stream food webs. Freshw. Biol., 44, 413:422.  
+
+Townsend, C.R., Thompson, R.M., Mcintosh, A.R., Kilroy, C., Edwards, E. and Scarsbrook, M.R. (1998). Disturbance, resource supply, and food:web architecture in streams. Ecol. Lett., 1, 200:209.  
+
+Ulanowicz, R.E., Holt, R.D., Barfield, M., 2013. Limits on ecosystem trophic complexity: insights from ecological network analysis. Ecol. Lett. 17, 127:136. doi:10.1111/ele.12216  
+
+Waide, R. and Reagan, W. (1996). The food web of a tropical rainforest. Univ. Chicago. University of Chicago Press, Chicago, Illinois, U.S.A.  
+
+Warren, P. (1989). Spatial and temporal variation in the structure of a freshwater food web. Oikos, 55, 299:311.  
+
+Yodzis, P. (1998). Local trophodynamics and the interaction of marine mammals and fisheries in the Benguela ecosystem. J. Anim. Ecol., 67, 635:658.  
+
+Yodzis, P. (2000). Diffuse Effects in Food Webs. Ecology, 81, 261:266.  
+
+Zander, C.D., Josten, N., Detloff, K.C., Poulin, R., McLaughlin, J.P. and Thieltges, D.W. (2011). Food web including metazoan parasites for a brackish shallow water ecosystem in Germany and Denmark. Ecology, 92, 2007.  
+
+
+# Interaction strength  
+Required libraries
+```{r, message = F}
+library(igraph)
+library(NetIndices)
+library(data.table)
+library(ggplot2)
+library(reshape2)
+```
+
+Import the Ulanowicz data
+
+```{r echo = F, message = F}
+setwd("C:/Users/borre_000/Dropbox/Food Web Database/Ecosystem Flow/Ulan_Edges/")
+ulanEDGE <- list()
+for(i in 1:length(list.files())){
+  ulanEDGE[[i]] <- read.csv(list.files()[i], row.names = 1)
+}
+```
+
+Determine the threshold flow weight above which we call "strong" interactions. Here we subset the Ulanowicz webs by taking just the top 50%, 40%, 30%, 20%, and 10%. 
+
+```{r}
+q50 <- sapply(ulanEDGE, function(x){quantile(x[,3], .5)})
+q60 <- sapply(ulanEDGE, function(x){quantile(x[,3], .6)})
+q70 <- sapply(ulanEDGE, function(x){quantile(x[,3], .7)})
+q80 <- sapply(ulanEDGE, function(x){quantile(x[,3], .8)})
+q90 <- sapply(ulanEDGE, function(x){quantile(x[,3], .9)})
+
+uEDGE.50 <- list()
+uEDGE.60 <- list()
+uEDGE.70 <- list()
+uEDGE.80 <- list()
+uEDGE.90 <- list()
+for(i in 1:length(ulanEDGE)){
+  uEDGE.50[[i]] <- ulanEDGE[[i]][which(ulanEDGE[[i]][,3] >= q50[i]),]
+  uEDGE.60[[i]] <- ulanEDGE[[i]][which(ulanEDGE[[i]][,3] >= q60[i]),]
+  uEDGE.70[[i]] <- ulanEDGE[[i]][which(ulanEDGE[[i]][,3] >= q70[i]),]
+  uEDGE.80[[i]] <- ulanEDGE[[i]][which(ulanEDGE[[i]][,3] >= q80[i]),]
+  uEDGE.90[[i]] <- ulanEDGE[[i]][which(ulanEDGE[[i]][,3] >= q90[i]),]
+}
+
+uGRAPH <- lapply(uEDGE.50, function(x){graph.edgelist(as.matrix(x[,1:2]))})
+uGRAPH6 <- lapply(uEDGE.60, function(x){graph.edgelist(as.matrix(x[,1:2]))})
+uGRAPH7 <- lapply(uEDGE.70, function(x){graph.edgelist(as.matrix(x[,1:2]))})
+uGRAPH8 <- lapply(uEDGE.80, function(x){graph.edgelist(as.matrix(x[,1:2]))})
+uGRAPH9 <- lapply(uEDGE.90, function(x){graph.edgelist(as.matrix(x[,1:2]))})
+
+uMAT <- lapply(uGRAPH, get.adjacency, sparse = F)
+uMAT6 <- lapply(uGRAPH6, get.adjacency, sparse = F)
+uMAT7 <- lapply(uGRAPH7, get.adjacency, sparse = F)
+uMAT8 <- lapply(uGRAPH8, get.adjacency, sparse = F)
+uMAT9 <- lapply(uGRAPH9, get.adjacency, sparse = F)
+```
+
+```{r}
+
+tind <- lapply(uMAT, TrophInd)
+tind6 <- lapply(uMAT6, TrophInd)
+tind7 <- lapply(uMAT7, TrophInd)
+tind8 <- lapply(uMAT8, TrophInd)
+tind9 <- lapply(uMAT9, TrophInd)
+
+prop.omn <- sapply(tind, function(x){(1 - sum(x$OI == 0)/nrow(x)) * 100})
+prop.omn6 <- sapply(tind6, function(x){(1 - sum(x$OI == 0)/nrow(x)) * 100})
+prop.omn7 <- sapply(tind7, function(x){(1 - sum(x$OI == 0)/nrow(x)) * 100})
+prop.omn8 <- sapply(tind8, function(x){(1 - sum(x$OI == 0)/nrow(x)) * 100})
+prop.omn9 <- sapply(tind9, function(x){(1 - sum(x$OI == 0)/nrow(x)) * 100})
+
+p.omn <- matrix(c(prop.omn, prop.omn6, prop.omn7, prop.omn8, prop.omn9), ncol = 5)
+colnames(p.omn) <- seq(50, 90, 10)
+omn.dat <- data.frame(prop = seq(50, 90, 10), omn = colMeans(p.omn), 
+                      upper = apply(p.omn, 2, 
+                                    function(x){mean(x) + 1.96 * (sd(x)/sqrt(length(x)))}), 
+                      lower = apply(p.omn, 2, 
+                                    function(x){mean(x) - 1.96 * (sd(x)/sqrt(length(x)))}))
+``` 
+
+```{r }
+ggplot(omn.dat, aes(x = prop, y = omn)) + geom_errorbar(aes(x = prop, ymax = upper, ymin = lower), width = 1) + geom_point(data = data.frame(melt(p.omn)), aes(x = Var2, y = value), alpha = .25, position = "jitter") + geom_point() + theme_bw() + xlab("Flow Weight Percentile Cutoff (percentage)") + ylab("Percent Omnivorous Species")
+```
   
-Thompson, R. and Townsend, C. (2005). Energy availability, spatial heterogeneity and ecosystem size predict food-web structure in streams. Oikos, 108, 137–148.
-      
-27.
+**Figure A1** The proportion of omnivorous species in 15 ecosystem flow networks that have been subset by flow weight. Values along the x-axis represent removal of the bottom 50, 60, 70, 80, and 90 percentiles of flow weights. Data for making this figure is available from [http://www.cbl.umces.edu/~ulan](http://www.cbl.umces.edu/~ulan)   
   
-Thompson, R.M. and Townsend, C.R. (2000). Is resolution the solution?: the effect of taxonomic resolution on the calculated properties of three stream food webs. Freshw. Biol., 44, 413–422.
-      
-28.
-  
-Townsend, C.R., Thompson, R.M., Mcintosh, A.R., Kilroy, C., Edwards, E. and Scarsbrook, M.R. (1998). Disturbance, resource supply, and food-web architecture in streams. Ecol. Lett., 1, 200–209.
-      
-29.
-  
-Waide, R. and Reagan, W. (1996). The food web of a tropical rainforest. Univ. Chicago. University of Chicago Press, Chicago, Illinois, U.S.A.
-      
-30.
-  
-Warren, P. (1989). Spatial and temporal variation in the structure of a freshwater food web. Oikos, 55, 299–311.
-      
-31.
-  
-Yodzis, P. (1998). Local trophodynamics and the interaction of marine mammals and fisheries in the Benguela ecosystem. J. Anim. Ecol., 67, 635–658.
-      
-32.
-  
-Yodzis, P. (2000). Diffuse Effects in Food Webs. Ecology, 81, 261–266.
-      
-33.
-  
-Zander, C.D., Josten, N., Detloff, K.C., Poulin, R., McLaughlin, J.P. and Thieltges, D.W. (2011). Food web including metazoan parasites for a brackish shallow water ecosystem in Germany and Denmark. Ecology, 92, 2007.
+Note that there is still at least 20% omnivory even when only looking at the top 10% of interactions. We say "at least" because this simple analysis does not remove from consideration species who are disconnected from the web (i.e. they do not have any interactions whose flow is above the threshold).    
+
 
 # Code
+
+All code here can also be found on [GitHub](https://github.com/jjborrelli/Food-Chain-Length)
+
 ```{r chunk opts, echo = F, message = F}
 library(knitr)
 opts_chunk$set(eval = F)
@@ -160,6 +192,7 @@ library(ggplot2)
 library(grid)
 library(data.table)
 library(devtools)
+library(NetIndices)
 ```  
 
 ## Functions  
@@ -414,9 +447,12 @@ getQSS <- function(webiter = 100, maxchain = 9, totalINT = 14, params, filepath,
   write.csv(chain.data, file = paste(filepath, "/webdata-", 
                                      totalINT, ".csv", sep = ""),
             row.names = F)
+  
+  #Code to generate dataframes of sampled matrices (note this can create very large files)
   #write.csv(iter.data, file = paste(filepath, "/iterdata-", 
   #                                  totalINT, ".csv", sep = ""),
   #          row.names = F)
+  
   return(chain.data)
 }
 
@@ -521,14 +557,9 @@ path <- getURL("https://raw.githubusercontent.com/jjborrelli/Food-Chain-Length/m
 
 web.diameters <- read.csv(text = path, row.names = 1)
 
-diam.plot <- ggplot(web.diameters, aes(x = Diameter + 1, y = ..density..))
+diam.plot <- ggplot(web.diameters, aes(x = Diameter + 1))
 diam.plot <- diam.plot + geom_histogram(binwidth = 1)
-diam.plot <- diam.plot + theme(axis.title.x = element_text(size = 20))
-diam.plot <- diam.plot + theme(axis.title.y = element_text(size = 20))
-diam.plot <- diam.plot + theme(axis.text.x = element_text(size = 15))
-diam.plot <- diam.plot + theme(axis.text.y = element_text(size = 15))
-diam.plot <- diam.plot + scale_y_continuous(name = "Density", limits = c(0,.55))
-diam.plot <- diam.plot + scale_x_continuous(name = "Longest Chain Length", breaks = 0:9) + theme_bw()
+diam.plot <- diam.plot + scale_x_continuous(name = "Longest Chain Length", breaks = 0:9) + ylab("Frequency") + theme_bw()
 ```
 #### Figure 1b
 ```{r fig1a, message = F}
@@ -538,9 +569,9 @@ trophic.properties <- read.csv(text = path2, row.names = 1)
 consumers <- which(round(trophic.properties$TL, 6) >= 2)
 
 # ggplot of distribution of trophic positions equal or higher than 2
-tc.plot <- ggplot(trophic.properties[consumers,], aes(x = TL, y = ..density..)) + theme_bw()
-tc.plot <- tc.plot + geom_histogram(binwidth = 1) + xlab("Trophic Position") + ylab("Density")
-tc.plot <- tc.plot + scale_x_continuous(limits = c(2,6),name = "Trophic Position") + scale_y_continuous(name = "Density", limits = c(0,.55))
+tc.plot <- ggplot(trophic.properties[consumers,], aes(x = TL)) + theme_bw()
+tc.plot <- tc.plot + geom_histogram(binwidth = 1) + xlab("Trophic Position") + ylab("Frequency")
+tc.plot <- tc.plot + scale_x_continuous(limits = c(2,6),name = "Trophic Position") #+ scale_y_continuous(name = "Density", limits = c(0,.55))
 tc.plot
 ```
 
@@ -550,7 +581,7 @@ The simple web matrices can be visualized with the following code (note: require
 But first the sign matrices need to be converted to graph objects
 
 ```{r graphOBJ}
-graph.chains<-lapply(sign.matrices,graph.adjacency)
+graph.chains<-lapply(sign.matrices, graph.adjacency)
 ```
   
 The layout is defined for each node of each chain:  
@@ -579,7 +610,7 @@ sixspec2<-matrix(c(2,1,
                   2,4),nrow=6,ncol=2,byrow=T)
 
 layouts<-list(twospec2,threespec2,fourspec2,fivespec2,sixspec2)
-text<-c("a","b","c","d","e")
+
 ```
 
 Setting the plotting options to highlight the longest chain in each web:  
@@ -598,7 +629,7 @@ for(i in 1:5){
               vertex.size = 40,
               vertex.color = "white",
               vertex.label.color = "black",
-              vertex.label.cex = 1,
+              vertex.label.cex = .8,
               edge.width = 1,
               edge.arrow.size = .35,
               frame = T,
@@ -609,15 +640,10 @@ for(i in 1:5){
 ### Figure 3
 ```{r setupFigure1b}
 
-qss.plot <- qplot(2:6, unlist(qss), xlab = "Number of Trophic Levels", ylab = "Quasi Sign-
-                  Stability", margin = T)
-qss.plot <- qss.plot + geom_point(size = 4)
+qss.plot <- qplot(2:6, unlist(qss), xlab = "Longest Chain Length", ylab = "Quasi Sign-Stability", margin = T)
+qss.plot <- qss.plot + geom_point(size = 2)
 qss.plot <- qss.plot + geom_line() + theme_bw()
-
-qss.plot <- qss.plot + theme(axis.title.x = element_text(size=22))
-qss.plot <- qss.plot + theme(axis.title.y = element_text(size=22))
-qss.plot <- qss.plot + theme(axis.text.x = element_text(size=18))
-qss.plot <- qss.plot + theme(axis.text.y = element_text(size=18))
+qss.plot
 ```
 
 ### Figure 4  
@@ -645,7 +671,7 @@ sub2 <- subset(webdata, par == "5/-10" | par == "10/-5")
 sub3 <- subset(webdata, par == "1/-1" | par == "10/-10" | par == "5/-5")
 ```
 
-Plots of the different subsets of data  
+Plots of the different subsets of data. The final plot is what appears in the paper.   
 
 ```{r eval = FALSE}
 ggplot(sub1, aes(x = factor(diam+1), y = qss)) + 
@@ -656,8 +682,6 @@ ggplot(sub1, aes(x = factor(diam+1), y = qss)) +
   facet_grid(par~C) + theme_bw() +
   xlab("Longest Food Chain Length") + ylab("Quasi sign-stability")
 
-#ggsave("C:/Users/jjborrelli/Desktop/CHAINDATA/rand1.jpeg", dpi = 1000, width = 8, height = 10)
-#dev.off()
 
 ggplot(sub2, aes(x = factor(diam+1), y = qss)) + 
   geom_point(alpha = .25, position = position_jitter(w=0.2), col = "grey58") + 
@@ -667,8 +691,6 @@ ggplot(sub2, aes(x = factor(diam+1), y = qss)) +
   facet_grid(par~C) + theme_bw() +
   xlab("Longest Food Chain Length") + ylab("Quasi sign-stability")
 
-#ggsave("C:/Users/jjborrelli/Desktop/CHAINDATA/rand2.jpeg", dpi = 1000, width = 8, height = 10)
-#dev.off()
 
 ggplot(sub3, aes(x = factor(diam+1), y = qss)) + 
   geom_point(alpha = .25, position = position_jitter(w=0.2), col = "grey58") + 
@@ -678,8 +700,6 @@ ggplot(sub3, aes(x = factor(diam+1), y = qss)) +
   facet_grid(par~C) + theme_bw() +
   xlab("Longest Food Chain Length") + ylab("Quasi sign-stability")
 
-#ggsave("C:/Users/jjborrelli/Desktop/CHAINDATA/rand3.jpeg", dpi = 1000, width = 8, height = 10)
-#dev.off()
 
 ggplot(webdata, aes(x = factor(diam+1), y = qss)) + 
   geom_point(alpha = .25, position = position_jitter(w=0.2), col = "grey58") + 
@@ -689,8 +709,6 @@ ggplot(webdata, aes(x = factor(diam+1), y = qss)) +
   facet_grid(par~C) + theme_bw() +
   xlab("Longest Food Chain Length") + ylab("Quasi sign-stability")
 
-#ggsave("C:/Users/jjborrelli/Desktop/CHAINDATA/rand-all.jpeg", dpi = 1000, width = 8, height = 10)
-#dev.off()
 ```
 
 ### Figure 4  
@@ -718,7 +736,7 @@ sub2 <- subset(webdata, par == "5/-10" | par == "10/-5")
 sub3 <- subset(webdata, par == "1/-1" | par == "10/-10" | par == "5/-5")
 ```
 
-Plots of the different subsets of data  
+Plots of the different subsets of data. The final plot is what appears in the paper.  
 
 ```{r eval = FALSE}
 ggplot(sub1, aes(x = factor(diam+1), y = qss)) + 
@@ -729,8 +747,6 @@ ggplot(sub1, aes(x = factor(diam+1), y = qss)) +
   facet_grid(par~C) + theme_bw() +
   xlab("Longest Food Chain Length") + ylab("Quasi sign-stability")
 
-#ggsave("C:/Users/jjborrelli/Desktop/CHAINDATA/rand1.jpeg", dpi = 1000, width = 8, height = 10)
-#dev.off()
 
 ggplot(sub2, aes(x = factor(diam+1), y = qss)) + 
   geom_point(alpha = .25, position = position_jitter(w=0.2), col = "grey58") + 
@@ -740,8 +756,6 @@ ggplot(sub2, aes(x = factor(diam+1), y = qss)) +
   facet_grid(par~C) + theme_bw() +
   xlab("Longest Food Chain Length") + ylab("Quasi sign-stability")
 
-#ggsave("C:/Users/jjborrelli/Desktop/CHAINDATA/rand2.jpeg", dpi = 1000, width = 8, height = 10)
-#dev.off()
 
 ggplot(sub3, aes(x = factor(diam+1), y = qss)) + 
   geom_point(alpha = .25, position = position_jitter(w=0.2), col = "grey58") + 
@@ -751,8 +765,6 @@ ggplot(sub3, aes(x = factor(diam+1), y = qss)) +
   facet_grid(par~C) + theme_bw() +
   xlab("Longest Food Chain Length") + ylab("Quasi sign-stability")
 
-#ggsave("C:/Users/jjborrelli/Desktop/CHAINDATA/rand3.jpeg", dpi = 1000, width = 8, height = 10)
-#dev.off()
 
 ggplot(webdata, aes(x = factor(diam+1), y = qss)) + 
   geom_point(alpha = .25, position = position_jitter(w=0.2), col = "grey58") + 
@@ -761,7 +773,4 @@ ggplot(webdata, aes(x = factor(diam+1), y = qss)) +
                geom="errorbar", width = .2) + 
   facet_grid(par~C) + theme_bw() +
   xlab("Longest Food Chain Length") + ylab("Quasi sign-stability")
-
-#ggsave("C:/Users/jjborrelli/Desktop/CHAINDATA/rand-all.jpeg", dpi = 1000, width = 8, height = 10)
-#dev.off()
 ```
