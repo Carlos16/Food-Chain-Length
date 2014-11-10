@@ -19,9 +19,9 @@ Three food webs were downloaded from the [Dryad Digital Repository](http://datad
   
 Baird, D. and Ulanowicz, R. (1989). The seasonal dynamics of the Chesapeake Bay ecosystem. Ecol. Monogr., 59, 329:364.  
 
-Christensen, V. and Pauly, D. (1992). ECOPATH II: Äîa software for balancing steady:state ecosystem models and calculating network characteristics. Ecol. Modell., 61, 169:185.  
+Christensen, V. and Pauly, D. (1992). ECOPATH II: a software for balancing steady-state ecosystem models and calculating network characteristics. Ecol. Modell., 61, 169: 185. 
 
-Christian, R.R. and Luczkovich, J.J. (1999). Organizing and understanding a winter:Äôs seagrass foodweb network through effective trophic levels. Ecol. Modell., 117, 99:124.  
+Christian, R.R. and Luczkovich, J.J. (1999). Organizing and understanding a winter's seagrass foodweb network through effective trophic levels. Ecol. Modell., 117, 99:124.    
 
 Dunne, J., Williams, R. and Martinez, N. (2004). Network structure and robustness of marine food webs. Mar. Ecol. Prog. Ser., 273, 291:302.  
 
@@ -35,7 +35,7 @@ Havens, K. (1992). Scale and structure in natural food webs. Science., 257, 1107
 
 Hechinger, R.F., Lafferty, K.D., McLaughlin, J.P., Fredensborg, B.L., Huspeni, T.C., Lorda, J., et al. (2011). Food webs including parasites, biomass, body sizes, and life stages for three California/Baja California estuaries. Ecology, 92, 791.  
 
-Jaarsma, N.G., de Boer, S.M., Townsend, C.R., Thompson, R.M. and Edwards, E.D. (1998). Characterising food:Äêwebs in two New Zealand streams. New Zeal. J. Mar. Freshw. Res., 32, 271:286.  
+Jaarsma, N.G., de Boer, S.M., Townsend, C.R., Thompson, R.M. and Edwards, E.D. (1998). Characterising food-webs in two New Zealand streams. New Zeal. J. Mar. Freshw. Res., 32, 271:286.  
 
 Link, J. (2002). Does food web theory work for marine ecosystems? Mar. Ecol. Prog. Ser., 230, 1:9.  
 
@@ -96,12 +96,16 @@ library(reshape2)
 ```
 
 Import the Ulanowicz data
+```{r echo = F}
+ulanpath <- "C:/Users/jjborrelli/Dropbox/Food Web Database/Ecosystem Flow/Ulan_Edges/"
+```
 
-```{r echo = F, message = F}
-setwd("C:/Users/borre_000/Dropbox/Food Web Database/Ecosystem Flow/Ulan_Edges/")
+```{r, message = F}
+setwd(ulanpath)
+
 ulanEDGE <- list()
 for(i in 1:length(list.files())){
-  ulanEDGE[[i]] <- read.csv(list.files()[i], row.names = 1)
+  ulanEDGE[[i]] <- read.csv(list.files()[i])[,-1]
 }
 ```
 
